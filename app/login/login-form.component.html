@@ -1,14 +1,24 @@
-<div class="container" style="width: 400px">            
+<div class="container" style="width: 400px">
 
-    <h1 class="display-4">SSYSGw</h1>            
+    <h1 class="display-4">SSYSGw</h1>
     <p>Administrator system console</p>
-    <form class="form-signin">
-        <div>
-            <p><input id="login" type="text" class="form-control" placeholder="Login"></p>
+
+    <form [formGroup]="form" class="form-signin">
+        <div class="form-group">
+            <input id="login" type="text" class="form-control" placeholder="Username" formControlName="login" [(ngModel)]="loginData.login">
+            <div *ngIf="form.controls.login.touched && form.controls.login.errors?.required" class="alert alert-danger">
+                Username is required
+            </div>
         </div>
-        <div>
-            <p><input id="password" type="text" class="form-control" placeholder="Password"></p>
+        <div class="form-group">
+            <input #password id="password" type="text" class="form-control" placeholder="Password" formControlName="password" [(ngModel)]="loginData.password">
+            <div *ngIf="form.controls.password.touched && form.controls.password.errors?.required" class="alert alert-danger">
+                Password is required
+            </div>
+            <div  *ngIf="errorMessage" class="alert alert-danger">
+                {{errorMessage}}
+            </div>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" (click)="onClick(form)" [disabled]="form.invalid">Sign in</button>
     </form>
 </div>

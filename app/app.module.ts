@@ -7,10 +7,13 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AppComponent}   from './app.component';
 
 import {LoginFormComponent}   from './login/login-form.component';
+import {LoginService} from "./login/login.service";
+import {MenuComponent} from "./menu.component";
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, NgbModule, NgbModule.forRoot()],
-  declarations: [ AppComponent, LoginFormComponent ],
+  declarations: [ AppComponent, MenuComponent, LoginFormComponent ],
+  providers: [ LoginService ],
   bootstrap:    [ AppComponent ]
 })
 
