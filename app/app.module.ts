@@ -8,13 +8,18 @@ import {AppComponent}   from './app.component';
 
 import {LoginFormComponent}   from './login/login-form.component';
 import {LoginService} from "./login/login.service";
-import {MenuComponent} from "./menu.component";
+import {TopMenuComponent} from "./menu/top-menu.component";
+
+import {routing} from "./app.routing";
+import {SessionService} from "./session.service";
+import {TopMenuService} from "./menu/top-menu.service";
 
 @NgModule({
-  imports:      [ BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, NgbModule, NgbModule.forRoot()],
-  declarations: [ AppComponent, MenuComponent, LoginFormComponent ],
-  providers: [ LoginService ],
-  bootstrap:    [ AppComponent ]
+    imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
+    declarations: [AppComponent, TopMenuComponent, LoginFormComponent],
+    providers: [LoginService, SessionService, TopMenuService],
+    bootstrap: [AppComponent]
 })
 
-export class AppModule { }
+export class AppModule {
+}

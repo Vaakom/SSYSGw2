@@ -7,13 +7,14 @@ import {LoginData} from './login.data'
 
 @Injectable()
 export class LoginService{
-    private url = 'http://jsonplaceholder.typicode.com/posts';
+    private url = '';
+
     constructor (private http: Http){}
     
     doLogin(loginData: LoginData){
         let responseStr = this.getMockResponceStringArray(loginData);
 
-        return Observable.from(responseStr).map(resp => JSON.parse(resp));
+        return Observable.from(responseStr).map(res => JSON.parse(res));
     }
 
     // get() : Observable<Object[]>{
