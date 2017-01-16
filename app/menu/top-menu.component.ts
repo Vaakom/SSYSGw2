@@ -14,16 +14,17 @@ export class TopMenuComponent implements OnInit{
     tablesList: [Object];
 
     ngOnInit(): void {
-        this.sessionService.userInfoSubject.subscribe(userInfo => this.loadMenu());
+        this.sessionService.userInfoSubject.subscribe(userInfo => this.loadMenu(userInfo));
     }
 
-    loadMenu(){
-        console.log("Load menu!");
-        this.topMenuService.getTables().subscribe(
-            tables => {
-                this.tablesList = tables.rowSet;
-                console.log(this.tablesList);
-            }
-        );
+    loadMenu(userInfo){
+        if(userInfo)
+            this.topMenuService.getTables().subscribe(
+                tables => {
+                    this.tablesList = tables.rowSet;
+                }
+            );
+        else
+            this.tablesList = null;
     }
 }
