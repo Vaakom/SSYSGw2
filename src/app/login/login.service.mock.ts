@@ -16,9 +16,6 @@ export class LoginServiceMock extends LoginService{
     doLogout(){
         return Observable.from(this.getMockLogoutResponse()).map(res => JSON.parse(res));
     }
-    // get() : Observable<Object[]>{
-    //     return this.http.get(this.url).map(res => res.json());
-    // }
 
     getMockLoginResponse(loginData: LoginData): [string]{
         let goodResponse = '{"s":"8D495BE95A9E677CDA2001D7EDC5F11A","dt":"11.01.2017 17:37:29.196","nt":757104999525453,"p":{"lp":[],"lr":["ADMIN"],"pc":"INDOIDJPSUP","ak":"N","sr":"f567b77 2017-01-11 09:38:02 +0100","si":1800000},"st":"11.01.2017 17:06:20.040","tz":"Europe/Moscow","r":true,"id":"8D495BE95A9E677CDA2001D7EDC5F11A"}';
