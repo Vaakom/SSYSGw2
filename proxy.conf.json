@@ -1,0 +1,7 @@
+{
+  "/proxy": {
+    "target": "http://ft-depo:8088",
+    "secure": false,
+    "pathRewrite": {"^/proxy" : ""}
+  }
+}

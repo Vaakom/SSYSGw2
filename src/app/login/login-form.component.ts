@@ -32,7 +32,7 @@ export class LoginFormComponent implements OnInit{
 
     onClickLogin(){
         var loginResults = this.loginService.doLogin(this.loginData);
-        loginResults.subscribe(data => this.processLoginResponse(data));
+        loginResults.subscribe(data => {this.processLoginResponse(data)});
     }
 
     onClickLogout(){
@@ -41,6 +41,7 @@ export class LoginFormComponent implements OnInit{
     }
 
     processLoginResponse(response){
+        console.log(response);
         if(response.r == true) {
             this.errorMessage = null;
             this.sessionService.setUserInfo(response);
