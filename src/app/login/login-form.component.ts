@@ -32,25 +32,26 @@ export class LoginFormComponent implements OnInit{
 
     onClickLogin(){
         var loginResults = this.loginService.doLogin(this.loginData);
-        loginResults.subscribe(data => {this.processLoginResponse(data)});
+        loginResults.subscribe( data => {this.processLoginResponse(data)}, data => this.processBadResponse(data));
     }
 
-    onClickLogout(){
+    onClickLogout(data){
         var logoutResults = this.loginService.doLogout();
-        logoutResults.subscribe(data => this.processLogoutResponse(data));
+        logoutResults.subscribe( data => this.processLogoutResponse(data), data => this.processBadResponse(data));
     }
 
-    processLoginResponse(response){
-        console.log(response);
-        if(response.r == true) {
-            this.errorMessage = null;
-            this.sessionService.setUserInfo(response);
-        } else {
-            this.errorMessage = response.d;
-        }
+    processLoginResponse(data){
+        this.errorMessage = null;
+        this.sessionService.setUserInfo(data);
     }
 
-    processLogoutResponse(response){
+    processLogoutResponse(data){
+        console.log(data);
+        this.errorMessage = null;
         this.sessionService.setUserInfo(null);
+    }
+
+    processBadResponse(error: Error){
+        this.errorMessage = error.message;
     }
 }

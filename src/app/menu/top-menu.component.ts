@@ -19,12 +19,13 @@ export class TopMenuComponent implements OnInit{
 
     loadMenu(userInfo){
         if(userInfo)
-            this.topMenuService.getTables().subscribe(
-                tables => {
-                    this.tablesList = tables.rowSet;
-                }
-            );
+            this.topMenuService.getTables().subscribe(data => this.tablesList = data.rowSet, data => this.processBadResponse(data));
         else
             this.tablesList = null;
     }
+
+    processBadResponse(error: Error){
+        console.log(error.message);
+    }
+    
 }

@@ -1,4 +1,4 @@
-import {Http, URLSearchParams, Headers} from "@angular/http";
+import {Http, Headers} from "@angular/http";
 import 'rxjs/add/operator/map';
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
@@ -6,25 +6,30 @@ import {Observable} from "rxjs/Rx";
 import {LoginData} from './login.data'
 
 @Injectable()
-export class LoginService{
+export class LoginService {
     private url = '/proxy/SSYSGw/gw';
+    private headers = new Headers();
 
-    constructor (private http: Http){}
+    constructor (private http: Http){
+        this.headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    }
     
     doLogin(loginData: LoginData){
-        var headers = new Headers();
-        headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        let reqParamsStr = 'appver=123&action=NLogon&data={t:1484145452170,u:"DepoMonitor1",p:"2"}';
-        
-        return this.http.post(this.url, reqParamsStr, {headers: headers}).map(res => res.json());
+        let reqParamsStr = 'appver=123&action=NLogon&data={t:' + new Date().getTime() + ',u:' + loginData.login + ',p:' + loginData.password + '}';
+        return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
     }
 
     doLogout(){
-        return Observable.from(this.getMockLogoutResponse()).map(res => JSON.parse(res));
+        let reqParamsStr = 'action=NLogoff&data={u:""}';
+        return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
     }
 
-    getMockLogoutResponse(){
-        return ['{"success": "true"}'];
+    parseResponse(res){
+            let json = res.json();
+            if(json.r == false)
+                throw new Error(json.d ? json.d : 'Something wrong, we are sorry');
+            return json;        
     }
+
 }
 
