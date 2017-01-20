@@ -1,4 +1,4 @@
-import {Http, Headers} from "@angular/http";
+import {Http, Headers, RequestOptions} from "@angular/http";
 import 'rxjs/add/operator/map';
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs/Rx";
@@ -15,13 +15,16 @@ export class LoginService {
     }
     
     doLogin(loginData: LoginData){
+        let options = new RequestOptions({withCredentials: true, headers: this.headers});
+
         let reqParamsStr = 'appver=123&action=NLogon&data={t:' + new Date().getTime() + ',u:' + loginData.login + ',p:' + loginData.password + '}';
-        return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
+        return this.http.post(this.url, reqParamsStr, {withCredentials: true, headers: this.headers}).map(res => this.parseResponse(res));
     }
 
     doLogout(){
+        let options = new RequestOptions({withCredentials: true, headers: this.headers});
         let reqParamsStr = 'action=NLogoff&data={u:""}';
-        return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
+        return this.http.post(this.url, reqParamsStr, {withCredentials: true, headers: this.headers}).map(res => this.parseResponse(res));
     }
 
     parseResponse(res){

@@ -14,7 +14,7 @@ export class TopMenuService {
     }
 
     getTables(){
-        let reqParamsStr = 'action=NSubscribe&data={s:[{v:"FV_SYSTEM",a:"S"}]';
+        let reqParamsStr = 'action=NSubscribe&data={s:[{v:"FV_SYSTEM",a:"S"}],apr:"<script>se.highex.gw.Session.onData(",apo:");</script>"}';
         return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
     }
 
