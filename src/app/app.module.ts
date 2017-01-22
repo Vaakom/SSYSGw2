@@ -15,13 +15,14 @@ import {LoginServiceMock} from "./login/login.service.mock";
 import {TopMenuComponent} from "./menu/top-menu.component";
 import {TopMenuService} from "./menu/top-menu.service";
 import {TopMenuServiceMock} from "./menu/top-menu.service.mock";
+import {TableComponent} from "./table/table.component";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
-    declarations: [AppComponent, TopMenuComponent, LoginFormComponent],
+    declarations: [AppComponent, TopMenuComponent, LoginFormComponent, TableComponent],
     providers: [
-        {provide: LoginService, useClass: LoginService}, 
-        {provide: TopMenuService, useClass: TopMenuService}, 
+        {provide: LoginService, useClass: LoginServiceMock},
+        {provide: TopMenuService, useClass: TopMenuServiceMock},
         SessionService
     ],
     bootstrap: [AppComponent]

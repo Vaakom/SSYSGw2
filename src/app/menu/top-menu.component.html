@@ -1,9 +1,12 @@
 <nav class="navbar navbar-toggleable-md navbar-light">
-    <ul class="nav nav-pills">
-        <li class="nav-item" *ngFor="let table of tablesList">
-            <a class="nav-link" href="#">{{table[1]}}</a>
-        </li>
-    </ul>
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a class="nav-link" routerLink="" routerLinkActive="active">Home</a>
+    </li>
+    <li class="nav-item" *ngFor="let table of tablesList">
+      <a class="nav-link" [routerLink]="['/table', table[2]]" routerLinkActive="active">{{table[1]}}</a>
+    </li>
+  </ul>
 </nav>
 <!--<p></p>-->
 <!--<ul class="nav nav-pills">-->

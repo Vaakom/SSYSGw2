@@ -27,5 +27,5 @@ export class TopMenuComponent implements OnInit{
     processBadResponse(error: Error){
         console.log(error.message);
     }
-    
+
 }

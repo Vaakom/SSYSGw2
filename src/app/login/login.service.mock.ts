@@ -30,6 +30,6 @@ export class LoginServiceMock extends LoginService{
     }
 
     getMockLogoutResponse(){
-        return ['{"success": "true"}'];
+        return ['{"r": "true"}'];
     }
 }

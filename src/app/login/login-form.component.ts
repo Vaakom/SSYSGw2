@@ -3,7 +3,6 @@ import {LoginService} from "./login.service";
 import {LoginData} from "./login.data";
 import {FormGroup, FormControl, Validators} from "@angular/forms";
 import {SessionService} from "../session.service";
-import {userInfo} from "os";
 
 @Component({
     selector: 'login-form',
@@ -11,8 +10,6 @@ import {userInfo} from "os";
 })
 
 export class LoginFormComponent implements OnInit{
-
-    showLoginForm: boolean = true;
 
     loginData: LoginData = new LoginData("version 2.0");
 
@@ -27,7 +24,11 @@ export class LoginFormComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.sessionService.userInfoSubject.subscribe(userInfo => {this.showLoginForm = userInfo == null});
+
+    }
+
+    isShowLogin() : boolean{
+      return this.sessionService.userInfo == null;
     }
 
     onClickLogin(){
@@ -46,7 +47,6 @@ export class LoginFormComponent implements OnInit{
     }
 
     processLogoutResponse(data){
-        console.log(data);
         this.errorMessage = null;
         this.sessionService.setUserInfo(null);
     }

@@ -19,13 +19,12 @@ export class TopMenuService {
     }
 
     parseResponse(res){
-			console.log(res);
             let json = res.json();
-			console.log(json);
+
             if(json.r == false)
                 throw new Error(json.d ? json.d : 'Something wrong, we are sorry');
 
-            return json;        
+            return json;
     }
 
 }
