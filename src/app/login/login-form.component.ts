@@ -3,6 +3,7 @@ import {LoginService} from "./login.service";
 import {LoginData} from "./login.data";
 import {FormGroup, FormControl, Validators} from "@angular/forms";
 import {SessionService} from "../session.service";
+import {WebSocketService} from "../websocket.servcie";
 
 @Component({
     selector: 'login-form',
@@ -20,11 +21,12 @@ export class LoginFormComponent implements OnInit{
         password: new FormControl('', Validators.required)
     })
 
-    constructor(private loginService: LoginService, private sessionService: SessionService) {
+    constructor(private loginService: LoginService, private sessionService: SessionService, private webSocketService: WebSocketService) {
     }
 
     ngOnInit(): void {
-
+        this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
+        this.webSocketService.close();        
     }
 
     isShowLogin() : boolean{

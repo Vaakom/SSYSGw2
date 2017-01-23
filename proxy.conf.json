@@ -1,8 +1,14 @@
 {
+  "/proxyws": {
+    "target": "ws://ft-depo:8088",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {"^/proxyws" : ""}
+  },
   "/proxy": {
     "target": "http://ft-depo:8088",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {"^/proxy" : ""}
-  }
+  }  
 }

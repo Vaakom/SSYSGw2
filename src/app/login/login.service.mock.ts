@@ -7,7 +7,7 @@ import {LoginService} from './login.service'
 import {LoginData} from './login.data'
 
 @Injectable()
-export class LoginServiceMock extends LoginService{
+export class LoginServiceMock extends LoginService {
 
     doLogin(loginData: LoginData){
         return Observable.from(this.getMockLoginResponse(loginData)).map(res => JSON.parse(res));
