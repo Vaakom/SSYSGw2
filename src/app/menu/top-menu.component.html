@@ -1,8 +1,6 @@
-<nav class="navbar navbar-toggleable-md navbar-light">
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" routerLink="" routerLinkActive="active">Home</a>
-    </li>
+<nav class="navbar navbar-inverse bg-inverse" *ngIf="tablesList">
+  <ul class="navbar-nav">
+    <button class="btn btn-outline-secondary btn-block mb-2" routerLink="">Sign out</button>
     <li class="nav-item" *ngFor="let table of tablesList">
       <a class="nav-link" [routerLink]="['/table', table[2]]" routerLinkActive="active">{{table[1]}}</a>
     </li>
