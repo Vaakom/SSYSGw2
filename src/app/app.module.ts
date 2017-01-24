@@ -24,7 +24,7 @@ import {TableComponent} from "./table/table.component";
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
     declarations: [AppComponent, TopMenuComponent, LoginFormComponent, TableComponent],
     providers: [
-        {provide: LoginService, useClass: LoginServiceHttp},
+        {provide: LoginService, useClass: LoginServiceWs},
         {provide: TopMenuService, useClass: TopMenuServiceMock},
         SessionService,
         WebSocketService

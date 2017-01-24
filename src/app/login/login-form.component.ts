@@ -25,17 +25,19 @@ export class LoginFormComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
-        this.webSocketService.close();        
+        // this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
+        // this.webSocketService.close();        
     }
 
-    isShowLogin() : boolean{
-      return this.sessionService.userInfo == null;
+    isSignedIn() : boolean{
+      return this.sessionService.userInfo != null;
     }
 
     onClickLogin(){
-        var loginResults = this.loginService.doLogin(this.loginData);
-        loginResults.subscribe( data => {this.processLoginResponse(data)}, data => this.processBadResponse(data));
+        this.webSocketService.ws.subscribe(data => console.log(data));
+        this.loginService.doLogin(this.loginData);
+        //var loginResults = this.loginService.doLogin(this.loginData);
+        //loginResults.subscribe( data => {this.processLoginResponse(data)}, data => this.processBadResponse(data));
     }
 
     onClickLogout(data){

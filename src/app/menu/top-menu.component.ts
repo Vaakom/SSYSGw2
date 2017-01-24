@@ -22,6 +22,7 @@ export class TopMenuComponent implements OnInit{
             this.topMenuService.getTables().subscribe(data => this.tablesList = data.rowSet, data => this.processBadResponse(data));
         else
             this.tablesList = null;
+        console.log(this.tablesList);
     }
 
     processBadResponse(error: Error){

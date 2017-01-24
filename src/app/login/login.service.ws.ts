@@ -17,6 +17,8 @@ export class LoginServiceWs extends LoginService {
 
     doLogin(loginData: LoginData){
         //return this.http.post(this.url, reqParamsStr, {withCredentials: true, headers: this.headers}).map(res => this.parseResponse(res));
+        let loginStr = 'appver=123&action=NLogon&data={t:12345,u:"DepoMonotor1",p:"2"}';
+        this.webSocketService.sendMessage('appver=123&action=NLogon');
         return null;
     }
 
