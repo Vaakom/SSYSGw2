@@ -1,6 +1,10 @@
-<top-menu #topMenu></top-menu>
+<div class="row">
+  <div class="col-2">
+    <top-menu #topMenu></top-menu>
+  </div>
 
-
-<div class="container-fluid">
-    <login-form></login-form>
+  <div class="col">
+    <router-outlet></router-outlet>
+  </div>
 </div>
+  <!--<div class="container-fluid">-->
