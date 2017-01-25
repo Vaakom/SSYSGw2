@@ -16,21 +16,14 @@ export class LoginServiceWs extends LoginService {
     }
 
     doLogin(loginData: LoginData){
-        //return this.http.post(this.url, reqParamsStr, {withCredentials: true, headers: this.headers}).map(res => this.parseResponse(res));
-        let loginStr = 'appver=123&action=NLogon&data={t:12345,u:"DepoMonotor1",p:"2"}';
-        this.webSocketService.sendMessage('appver=123&action=NLogon');
+        let loginStr = 'vc=login&appver=123&action=NLogon&data={t:' + new Date().getTime() + ',u:' + loginData.login + ',p:' + loginData.password + '}';
+        this.webSocketService.sendMessage(loginStr);
         return null;
     }
 
     doLogout(){
-        //return this.http.post(this.url, reqParamsStr, {withCredentials: true, headers: this.headers}).map(res => this.parseResponse(res));
+        let logoutStr = 'vc=logout&action=NLogoff&data={u:""}';
+        this.webSocketService.sendMessage(logoutStr);
         return null;
-    }
-
-    parseResponse(res){
-            let json = res.json();
-            if(json.r == false)
-                throw new Error(json.d ? json.d : 'Something wrong, we are sorry');
-            return json;        
     }
 }

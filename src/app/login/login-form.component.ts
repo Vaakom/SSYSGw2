@@ -1,7 +1,9 @@
-import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core';
+import {FormGroup, FormControl, Validators} from "@angular/forms";
+import {Subject, Observable, Subscription} from "rxjs/Rx";
+
 import {LoginService} from "./login.service";
 import {LoginData} from "./login.data";
-import {FormGroup, FormControl, Validators} from "@angular/forms";
 import {SessionService} from "../session.service";
 import {WebSocketService} from "../websocket.servcie";
 
@@ -10,7 +12,10 @@ import {WebSocketService} from "../websocket.servcie";
     templateUrl: 'login-form.component.html'
 })
 
-export class LoginFormComponent implements OnInit{
+export class LoginFormComponent implements OnInit, OnDestroy{
+
+    private loginSubscription: Subscription;
+    private logoutSubscriptioon: Subscription;
 
     loginData: LoginData = new LoginData("version 2.0");
 
@@ -20,29 +25,38 @@ export class LoginFormComponent implements OnInit{
         login: new FormControl('', Validators.required),
         password: new FormControl('', Validators.required)
     })
-
+    
     constructor(private loginService: LoginService, private sessionService: SessionService, private webSocketService: WebSocketService) {
     }
 
     ngOnInit(): void {
-        // this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
-        // this.webSocketService.close();        
+        this.loginSubscription = this.webSocketService.getMessageForSubscription('login').subscribe(
+            data => {console.log(data); this.processLoginResponse(data)}, 
+            error => {console.log("process login error...");this.processBadResponse(error)}
+        );
+
+        this.logoutSubscriptioon = this.webSocketService.getMessageForSubscription('logout').subscribe(
+            data => {this.processLogoutResponse(data)}, 
+            error => {this.processBadResponse(error)}
+        );
+        
+    }
+
+    ngOnDestroy(): void {
+        this.loginSubscription.unsubscribe();
+        this.logoutSubscriptioon.unsubscribe(); 
     }
 
     isSignedIn() : boolean{
       return this.sessionService.userInfo != null;
     }
 
-    onClickLogin(){
-        this.webSocketService.ws.subscribe(data => console.log(data));
+    onClickLogin(){        
         this.loginService.doLogin(this.loginData);
-        //var loginResults = this.loginService.doLogin(this.loginData);
-        //loginResults.subscribe( data => {this.processLoginResponse(data)}, data => this.processBadResponse(data));
     }
 
     onClickLogout(data){
-        var logoutResults = this.loginService.doLogout();
-        logoutResults.subscribe( data => this.processLogoutResponse(data), data => this.processBadResponse(data));
+        this.loginService.doLogout();
     }
 
     processLoginResponse(data){
@@ -55,7 +69,7 @@ export class LoginFormComponent implements OnInit{
         this.sessionService.setUserInfo(null);
     }
 
-    processBadResponse(error: Error){
-        this.errorMessage = error.message;
+    processBadResponse(error){
+        this.errorMessage = error;        
     }
 }
