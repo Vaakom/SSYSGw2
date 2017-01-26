@@ -31,7 +31,7 @@ export class LoginFormComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
         this.loginSubscription = this.webSocketService.getMessageForSubscription('login').subscribe(
-            data => {console.log(data); this.processLoginResponse(data)}, 
+            data => {console.log("process login success..."); this.processLoginResponse(data)}, 
             error => {console.log("process login error...");this.processBadResponse(error)}
         );
 
