@@ -5,26 +5,20 @@ import {Observable} from "rxjs/Rx";
 
 @Injectable()
 export class TopMenuService {
-
-    private url = '/proxy/SSYSGw/gw';
-    private headers = new Headers();
-
-    constructor (private http: Http){
-        this.headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    getTables(){
+        return null;
     }
 
-    getTables(){
-        let reqParamsStr = 'action=NSubscribe&data={s:[{v:"FV_SYSTEM",a:"S"}],apr:"<script>se.highex.gw.Session.onData(",apo:");</script>"}';
-        return this.http.post(this.url, reqParamsStr, {headers: this.headers}).map(res => this.parseResponse(res));
+    startGettingTableData(tableCode: string){
+        return null;
+    }
+
+    stopGettingTableData(tableCode: string){
+        return null;
     }
 
     parseResponse(res){
-            let json = res.json();
-
-            if(json.r == false)
-                throw new Error(json.d ? json.d : 'Something wrong, we are sorry');
-
-            return json;
+        return null;
     }
 
 }

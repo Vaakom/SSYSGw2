@@ -1,11 +1,10 @@
-import {Http} from "@angular/http";
 import {Injectable} from "@angular/core";
 import {Subject, Observable, Subscription} from "rxjs/Rx";
 import { WebSocketSubject } from "rxjs/observable/dom/WebSocketSubject";
 import 'rxjs/add/operator/map';
 
 import {LoginService} from './login.service'
-import {WebSocketService} from "../websocket.servcie";
+import {WebSocketService} from "../system/websocket.servcie";
 import {LoginData} from './login.data'
 
 @Injectable()

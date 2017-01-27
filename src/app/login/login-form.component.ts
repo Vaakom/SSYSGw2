@@ -4,8 +4,8 @@ import {Subject, Observable, Subscription} from "rxjs/Rx";
 
 import {LoginService} from "./login.service";
 import {LoginData} from "./login.data";
-import {SessionService} from "../session.service";
-import {WebSocketService} from "../websocket.servcie";
+import {SessionService} from "../system/session.service";
+import {WebSocketService} from "../system/websocket.servcie";
 
 @Component({
     selector: 'login-form',
@@ -30,16 +30,8 @@ export class LoginFormComponent implements OnInit, OnDestroy{
     }
 
     ngOnInit(): void {
-        this.loginSubscription = this.webSocketService.getMessageForSubscription('login').subscribe(
-            data => {console.log("process login success..."); this.processLoginResponse(data)}, 
-            error => {console.log("process login error...");this.processBadResponse(error)}
-        );
-
-        this.logoutSubscriptioon = this.webSocketService.getMessageForSubscription('logout').subscribe(
-            data => {this.processLogoutResponse(data)}, 
-            error => {this.processBadResponse(error)}
-        );
-        
+        this.loginSubscription = this.webSocketService.getMessageForSubscription('login').subscribe(data => {this.processLoginResponse(data)});        
+        this.logoutSubscriptioon = this.webSocketService.getMessageForSubscription('logout').subscribe(data => {this.processLogoutResponse(data)});        
     }
 
     ngOnDestroy(): void {
@@ -60,16 +52,27 @@ export class LoginFormComponent implements OnInit, OnDestroy{
     }
 
     processLoginResponse(data){
-        this.errorMessage = null;
-        this.sessionService.setUserInfo(data);
+        let json = data['data'];
+        if(this.dataContainErrorMessage(json)){
+            this.errorMessage = json['d'];
+        } else {
+            this.errorMessage = null;
+            this.sessionService.setUserInfo(json);
+        }
     }
 
     processLogoutResponse(data){
-        this.errorMessage = null;
-        this.sessionService.setUserInfo(null);
+        let json = data['data'];
+        if(this.dataContainErrorMessage(json)){
+            this.errorMessage = json;
+        } else {
+            this.errorMessage = null;
+            this.sessionService.setUserInfo(null);
+        }   
     }
 
-    processBadResponse(error){
-        this.errorMessage = error;        
+    dataContainErrorMessage(data): boolean {
+        return data['r'] == false;
     }
+    
 }

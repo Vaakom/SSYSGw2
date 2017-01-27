@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-import {SessionService} from "./session.service";
-import {WebSocketService} from "./websocket.servcie";
+import {SessionService} from "./system/session.service";
+import {WebSocketService} from "./system/websocket.servcie";
 
 @Component({
     selector: 'my-app',
