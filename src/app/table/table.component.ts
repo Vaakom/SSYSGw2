@@ -30,13 +30,15 @@ export class TableComponent implements OnInit, OnDestroy , OnChanges{
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    console.log(0);
+    this.route.params.subscribe(params => {      
       this.tableCode = params["code"];
     });
-
-    this.tableSubscription = this.webSocketService.getMessageForSubscription('table').subscribe(data => this.processTableResponse(data));
+    console.log(1);
     this.tableDataService.startGettingTableData(this.tableCode);//TODO process bad response    
+    console.log(2);      
     this.getTableInfoByCode();
+    console.log(3);
   }
 
 
@@ -47,15 +49,10 @@ export class TableComponent implements OnInit, OnDestroy , OnChanges{
 
   processTableResponse(data): void {
     console.log("Table Response!");  
-      // console.log("Table Response!");  
-      // if(this.tableCode == data.data.params.type) {
-      //   console.log('Table data!!!');
-      //   console.log(data);
-      //   this.tableData = data;
-      // }
   }
 
   getTableInfoByCode(){
+    console.log('Search table meta by code');
     for(let table of this.sessionService.tablesList)
       if(this.tableCode == table[2])
         this.tableMeta = table;
