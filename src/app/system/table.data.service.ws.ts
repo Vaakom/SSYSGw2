@@ -14,14 +14,12 @@ export class TableDataServiceWs extends TopMenuService{
     startGettingTableData(tableCode: string){
         let reqParamsStr = 'vc=tableSign&action=NSubscribe&data={s:[{v:"' + tableCode + '",a:"S"}]}';
         this.webSocketService.sendMessage(reqParamsStr);
-        console.log('Subscribe for ' + tableCode);
         return null;
     }
 
     stopGettingTableData(tableCode: string){
-        let reqParamsStr = 'vc=tableUnsign&action=Unsubscribe&data={s:[{v:"' + tableCode + '",a:"S"}]}';
+        let reqParamsStr = 'vc=tableUnsign&action=NSubscribe&data={s:[{v:"' + tableCode + '",a:"U"}]}';
         this.webSocketService.sendMessage(reqParamsStr);
-        console.log('Unsubscribe for ' + tableCode);
         return null;
     }
 }

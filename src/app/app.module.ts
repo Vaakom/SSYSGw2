@@ -15,6 +15,8 @@ import {LoginServiceHttp} from "./login/login.service.http";
 import {LoginServiceWs} from "./login/login.service.ws";
 import {LoginServiceMock} from "./login/login.service.mock";
 
+import {LogoutComponent}   from './logout/logout.component';
+
 import {TopMenuComponent} from "./menu/top-menu.component";
 import {TopMenuService} from "./menu/top-menu.service";
 import {TopMenuServiceHttp} from "./menu/top-menu.service.http";
@@ -25,7 +27,7 @@ import {TableDataServiceWs} from "./system/table.data.service.ws";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
-    declarations: [AppComponent, TopMenuComponent, LoginFormComponent, TableComponent],
+    declarations: [AppComponent, TopMenuComponent, LoginFormComponent, LogoutComponent, TableComponent],
     providers: [
         {provide: LoginService, useClass: LoginServiceWs},
         {provide: TopMenuService, useClass: TableDataServiceWs},

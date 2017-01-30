@@ -47,4 +47,8 @@ export class TopMenuComponent implements OnInit, OnDestroy{
         return this.sessionService.userInfo != null;
     }
 
+    isSignedIn() : boolean{
+      return this.sessionService.userInfo != null;
+    }    
+
 }

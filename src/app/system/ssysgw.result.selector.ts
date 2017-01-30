@@ -39,6 +39,7 @@ export class SSYSGwResultSelector {
         
         if(resultObject['data'])
             resultObject['data'] = JSON.parse(resultObject['data']);
+        console.log("System message:")
         console.log(resultObject);
         return resultObject;        
     }
@@ -52,6 +53,7 @@ export class SSYSGwResultSelector {
         } catch (err){
             resultObject = {vc: 'table', r: 'false', data: err + ' data: '+ data};
         }
+        console.log("Table message:")
         console.log(resultObject);
         return resultObject;
     }
