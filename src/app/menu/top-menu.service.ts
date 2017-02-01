@@ -9,6 +9,8 @@ export class TopMenuService {
         return null;
     }
 
+    setTableSubscription(tableCode: string, operationCode: string): void{}
+
     startGettingTableData(tableCode: string){
         return null;
     }
@@ -17,6 +19,10 @@ export class TopMenuService {
         return null;
     }
 
+    modifyGettingTableData(tableCode: string){
+        return null;
+    }
+    
     parseResponse(res){
         return null;
     }

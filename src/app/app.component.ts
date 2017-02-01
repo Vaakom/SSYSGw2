@@ -1,4 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Subscription} from "rxjs/Rx";
 import {SessionService} from "./system/session.service";
 import {WebSocketService} from "./system/websocket.servcie";
 
@@ -8,18 +9,30 @@ import {WebSocketService} from "./system/websocket.servcie";
 })
 
 export class AppComponent implements OnInit, OnDestroy{
+    
+    private websocketStateSubscription: Subscription;
+    
     constructor(private sessionService: SessionService, private webSocketService: WebSocketService){
     }
 
     ngOnInit(): void {
+        console.log('Application init');
+        this.subscribeForWebsocketCrush();
         this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
     }
 
     ngOnDestroy(): void {        
-        this.webSocketService.close();        
+        this.webSocketService.close();
+        this.websocketStateSubscription.unsubscribe();
+        console.log('Application destroy');
     }
 
-    isSignedIn() : boolean {
-      return this.sessionService.userInfo != null;
-    }    
+    subscribeForWebsocketCrush(){
+        this.websocketStateSubscription = this.webSocketService.isOpenedSubject.subscribe((websockedOpen: boolean) => { 
+            if(!websockedOpen && this.sessionService.isSessionOpen()) {
+                console.log("Close session because websocket closed");
+                this.sessionService.closeSession(); 
+            }
+        });
+    }
 }

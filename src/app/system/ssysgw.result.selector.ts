@@ -1,10 +1,13 @@
 export class SSYSGwResultSelector {
     
-    static resultSelector = function(messageEvent: MessageEvent){
+    static resultSelector = function(messageEvent: MessageEvent): Object {
+        let resultObject;
         if(SSYSGwResultSelector.isSystemMessageReply(messageEvent.data))
-            return SSYSGwResultSelector.processSystemMessageReply(messageEvent.data);
+            resultObject = SSYSGwResultSelector.processSystemMessageReply(messageEvent.data);
         else
-            return SSYSGwResultSelector.processTableMessageReply(messageEvent.data);
+            resultObject =  SSYSGwResultSelector.processTableMessageReply(messageEvent.data);
+        
+        return resultObject;
     }
 
     private static resultStringToObject(resultString: string) : Object {
@@ -35,13 +38,17 @@ export class SSYSGwResultSelector {
     }
 
     private static processSystemMessageReply(data: string): Object {
-        let resultObject = SSYSGwResultSelector.resultStringToObject(data);
-        
-        if(resultObject['data'])
-            resultObject['data'] = JSON.parse(resultObject['data']);
-        console.log("System message:")
-        console.log(resultObject);
-        return resultObject;        
+        let resultObject;
+        try {
+            resultObject = SSYSGwResultSelector.resultStringToObject(data);            
+            if(resultObject['data'])
+                resultObject['data'] = JSON.parse(resultObject['data']);
+        } catch (err){
+            resultObject = {vc: 'table', r: 'false', data: err + ' data: '+ data};
+            console.log(resultObject);
+        }
+
+        return resultObject;
     }
     
     private static processTableMessageReply(data: string): Object {
@@ -52,9 +59,10 @@ export class SSYSGwResultSelector {
             resultObject = {vc: 'table', r: 'true', data: resultData};
         } catch (err){
             resultObject = {vc: 'table', r: 'false', data: err + ' data: '+ data};
+            console.log(resultObject);
         }
-        console.log("Table message:")
-        console.log(resultObject);
+        // console.log("Table message:")
+        // 
         return resultObject;
     }
 }

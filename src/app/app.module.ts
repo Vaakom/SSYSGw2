@@ -30,7 +30,7 @@ import {TableDataServiceWs} from "./system/table.data.service.ws";
     declarations: [AppComponent, TopMenuComponent, LoginFormComponent, LogoutComponent, TableComponent],
     providers: [
         {provide: LoginService, useClass: LoginServiceWs},
-        {provide: TopMenuService, useClass: TableDataServiceWs},
+        TableDataServiceWs,
         SessionService,
         WebSocketService
     ],

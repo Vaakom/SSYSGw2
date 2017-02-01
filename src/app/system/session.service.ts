@@ -1,20 +1,35 @@
 import {Injectable} from "@angular/core";
-import {Subject} from "rxjs/Rx";
+import {BehaviorSubject} from "rxjs/Rx";
 
 @Injectable()
 export class SessionService {
 
-    userInfo: Object = null;
-    tablesList;
+    private userInfo: Object;
+    
+    sessionOpenSubject = new BehaviorSubject<boolean>(false);
 
-    userInfoSubject = new Subject<Object>();
-
-    setUserInfo(value) {
-        this.userInfo = value;
-        this.userInfoSubject.next(this.userInfo);
+    openSession(){
+        this.sessionOpenSubject.next(true);
     }
 
-    setTablesList(tablesList){
-        this.tablesList = tablesList;
+    closeSession(){
+        //TODO some clean operations
+        this.sessionOpenSubject.next(false);
+        this.userInfo = null;
     }
+
+    isSessionOpen(): boolean {
+        return this.sessionOpenSubject.getValue();
+    }
+
+    setUserInfo(userInfo: Object){
+        this.userInfo = userInfo
+    }
+
+    getUserInfo(): Object {
+        return this.userInfo;
+    }
+
+
+
 }

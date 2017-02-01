@@ -3,7 +3,7 @@ import {Subject, Observable, Subscription} from "rxjs/Rx";
 
 import {SessionService} from "../system/session.service";
 import {ActivatedRoute} from "@angular/router";
-import {TopMenuService} from "../menu/top-menu.service";
+import {TableDataServiceWs} from "../system/table.data.service.ws";
 import {WebSocketService} from "../system/websocket.servcie";
 
 @Component({
@@ -19,46 +19,33 @@ export class TableComponent implements OnInit, OnDestroy{
   
   tableData: Object;
 
-  constructor(private tableDataService: TopMenuService, 
+  constructor(private tableDataService: TableDataServiceWs, 
               private route: ActivatedRoute, 
               private sessionService: SessionService,
               private webSocketService: WebSocketService) {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {      
-      this.unsubscribe();
+    console.log('TableComponent init');
+    this.tableSubscription = this.webSocketService.getMessageSubjectByName('table').subscribe(data => this.processTableResponse(data));
+    
+    this.route.params.subscribe(params => {
       this.tableCode = params["code"];
-      this.subscribe();
+      console.log('New tableCode:' + this.tableCode);
+      this.tableData = null;
+      this.tableDataService.setTableSubscription(this.tableCode, this.tableDataService.subscribe);
     });
   }
 
 
   ngOnDestroy(): void {
-    this.unsubscribe();
+    console.log('TableComponent destroy');
+    this.tableSubscription.unsubscribe();
   }
 
   private processTableResponse(data): void {
-      if(this.tableCode == data.data.params.type) {        
-        console.log('We got some data for ' + data.data.params.type);
-        console.log(data);
-        this.tableData = data;
-      }
+      if(this.tableCode == data.data.params.type)
+        this.tableData = data;        
   }
 
-  private subscribe(){
-      console.log("SUBSCRIBE: " + this.tableCode);
-      this.tableDataService.startGettingTableData(this.tableCode);
-      this.tableSubscription = this.webSocketService.getMessageForSubscription('table').subscribe(data => this.processTableResponse(data));    
-  }
-
-  private unsubscribe(){
-    if(this.tableSubscription){
-      console.log("UNSUBSCRIBE: " + this.tableCode);
-      this.tableSubscription.unsubscribe();
-      this.tableDataService.stopGettingTableData(this.tableCode);    
-      this.tableCode = null;
-      this.tableData = null;
-    }  
-  }
 }

@@ -15,7 +15,6 @@ import {WebSocketService} from "../system/websocket.servcie";
 export class LoginFormComponent implements OnInit, OnDestroy{
 
     private loginSubscription: Subscription;
-    private logoutSubscriptioon: Subscription;
 
     loginData: LoginData = new LoginData("version 2.0");
 
@@ -30,25 +29,24 @@ export class LoginFormComponent implements OnInit, OnDestroy{
     }
 
     ngOnInit(): void {
-        this.loginSubscription = this.webSocketService.getMessageForSubscription('login').subscribe(data => {this.processLoginResponse(data)});        
-        this.logoutSubscriptioon = this.webSocketService.getMessageForSubscription('logout').subscribe(data => {this.processLogoutResponse(data)});        
+        console.log('Login component init');
+        this.loginSubscription = this.webSocketService.getMessageSubjectByName('login').subscribe(data => {this.processLoginResponse(data)});
     }
 
     ngOnDestroy(): void {
+        console.log('Login component destroy');
         this.loginSubscription.unsubscribe();
-        this.logoutSubscriptioon.unsubscribe(); 
     }
 
     isSignedIn() : boolean{
-      return this.sessionService.userInfo != null;
+      return this.sessionService.isSessionOpen();
     }
 
-    onClickLogin(){        
+    onClickLogin(){
+        if(!this.webSocketService.isOpened())
+            this.webSocketService.reconnect();
+
         this.loginService.doLogin(this.loginData);
-    }
-
-    onClickLogout(data){
-        this.loginService.doLogout();
     }
 
     processLoginResponse(data){
@@ -57,18 +55,9 @@ export class LoginFormComponent implements OnInit, OnDestroy{
             this.errorMessage = json['d'];
         } else {
             this.errorMessage = null;
+            this.sessionService.openSession();
             this.sessionService.setUserInfo(json);
         }
-    }
-
-    processLogoutResponse(data){
-        let json = data['data'];
-        if(this.dataContainErrorMessage(json)){
-            this.errorMessage = json;
-        } else {
-            this.errorMessage = null;
-            this.sessionService.setUserInfo(null);
-        }   
     }
 
     dataContainErrorMessage(data): boolean {
