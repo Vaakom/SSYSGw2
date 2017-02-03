@@ -1,7 +1,9 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription} from "rxjs/Rx";
+
 import {SessionService} from "./system/session.service";
 import {WebSocketService} from "./system/websocket.servcie";
+import {TableDataServiceWs} from "./system/table.data.service.ws";
 
 @Component({
     selector: 'my-app',
@@ -11,19 +13,25 @@ import {WebSocketService} from "./system/websocket.servcie";
 export class AppComponent implements OnInit, OnDestroy{
     
     private websocketStateSubscription: Subscription;
-    
-    constructor(private sessionService: SessionService, private webSocketService: WebSocketService){
+    private userInfoSubscription: Subscription;
+
+    constructor(private sessionService: SessionService, 
+                private webSocketService: WebSocketService,
+                private tableDataService: TableDataServiceWs){
     }
 
     ngOnInit(): void {
         console.log('Application init');
         this.subscribeForWebsocketCrush();
+        this.subscribeForUserInfoChanging();
+
         this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
     }
 
     ngOnDestroy(): void {        
         this.webSocketService.close();
         this.websocketStateSubscription.unsubscribe();
+        this.userInfoSubscription.unsubscribe();
         console.log('Application destroy');
     }
 
@@ -34,5 +42,9 @@ export class AppComponent implements OnInit, OnDestroy{
                 this.sessionService.closeSession(); 
             }
         });
+    }
+
+    subscribeForUserInfoChanging(){
+        this.sessionService.userInfoSubject.subscribe(userInfo => this.tableDataService.setUserInfo(userInfo));
     }
 }

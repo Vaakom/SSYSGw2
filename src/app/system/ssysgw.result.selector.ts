@@ -6,7 +6,7 @@ export class SSYSGwResultSelector {
             resultObject = SSYSGwResultSelector.processSystemMessageReply(messageEvent.data);
         else
             resultObject =  SSYSGwResultSelector.processTableMessageReply(messageEvent.data);
-        
+        console.log(resultObject);
         return resultObject;
     }
 

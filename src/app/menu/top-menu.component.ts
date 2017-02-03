@@ -14,6 +14,7 @@ export class TopMenuComponent implements OnInit, OnDestroy{
     private tableCode = 'FV_SYSTEM';
 
     private tableSubscription: Subscription;
+    private sessionOpenSubscription: Subscription;
 
     constructor(private tableDataService: TableDataServiceWs, private sessionService: SessionService, private webSocketService: WebSocketService){}
 
@@ -21,28 +22,35 @@ export class TopMenuComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
         console.log('Table menu init');        
-        this.sessionService.sessionOpenSubject.subscribe((isSessionOpen: boolean) => this.setupMenu(isSessionOpen));
+        
         this.tableSubscription = this.webSocketService.getMessageSubjectByName('table').subscribe(data => this.processTableResponse(data));
+        this.sessionOpenSubscription = this.sessionService.sessionOpenSubject.subscribe((isSessionOpen: boolean) => {
+            isSessionOpen ? this.subscribeForTableList() : this.cleanTableList();
+        });
     }
 
     ngOnDestroy(): void {
         this.tableSubscription.unsubscribe();
+        this.sessionOpenSubscription.unsubscribe();
+        
         console.log('Table menu destroy');
     }
 
 
     processTableResponse(data): void {
         if(this.tableCode == data.data.params.type)
-            this.tablesList = data.data.rowSet;
+            if(data.data.rowSet.length > 0)
+                this.tablesList = data.data.rowSet.slice(1);
     }
 
-    setupMenu(isSessionOpen: boolean){
-        if(this.sessionService.isSessionOpen())
-            this.tableDataService.setTableSubscription(this.tableCode, this.tableDataService.subscribe);
-        else    
-            this.tablesList = null;
+    subscribeForTableList(){
+        this.tableDataService.subscribeTable(this.tableCode);
     }
 
+    cleanTableList(){
+//        this.tableDataService.setTableSubscription(this.tableCode, this.tableDataService.unsubscribe);
+//        this.tablesList = null;
+    }
 
 
 }

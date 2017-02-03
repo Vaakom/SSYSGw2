@@ -54,20 +54,20 @@ export class LogoutComponent implements OnInit, OnDestroy{
         return data['r'] == false;
     }
 
-    onClickTestSign(data){
-        console.log("subscribe/unsubscribe FV_D_PARAMS");
-        this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.subscribe);
-        this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.unsubscribe);
-    }    
+    // onClickTestSign(data){
+    //     console.log("subscribe/unsubscribe FV_D_PARAMS");
+    //     this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.subscribe);
+    //     this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.unsubscribe);
+    // }    
 
-    onClickTestModify(data){        
-        if(this.termsSybscribed){
-            console.log("modify subscription FV_TERMS");
-            this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.modify);
-        } else {
-            this.termsSybscribed = true;
-            console.log("subscribe FV_TERMS");
-            this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.subscribe);
-        }    
-    }
+    // onClickTestModify(data){        
+    //     if(this.termsSybscribed){
+    //         console.log("modify subscription FV_TERMS");
+    //         this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.modify);
+    //     } else {
+    //         this.termsSybscribed = true;
+    //         console.log("subscribe FV_TERMS");
+    //         this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.subscribe);
+    //     }    
+    // }
 }

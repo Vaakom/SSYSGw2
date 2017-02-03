@@ -55,8 +55,7 @@ export class LoginFormComponent implements OnInit, OnDestroy{
             this.errorMessage = json['d'];
         } else {
             this.errorMessage = null;
-            this.sessionService.openSession();
-            this.sessionService.setUserInfo(json);
+            this.sessionService.openSession(json);
         }
     }
 

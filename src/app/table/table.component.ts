@@ -16,6 +16,8 @@ export class TableComponent implements OnInit, OnDestroy{
   private tableSubscription: Subscription;
 
   tableCode: string;
+
+  tableName: string;
   
   tableData: Object;
 
@@ -31,9 +33,9 @@ export class TableComponent implements OnInit, OnDestroy{
     
     this.route.params.subscribe(params => {
       this.tableCode = params["code"];
-      console.log('New tableCode:' + this.tableCode);
+      this.tableName = params["name"];
       this.tableData = null;
-      this.tableDataService.setTableSubscription(this.tableCode, this.tableDataService.subscribe);
+      this.tableDataService.subscribeTable(this.tableCode);
     });
   }
 

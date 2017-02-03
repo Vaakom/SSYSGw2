@@ -1,5 +1,6 @@
-<div>
-    <table class="table table-striped table-hover" *ngIf="tableData!=null">
+<div *ngIf="tableData!=null">
+    <h3>{{tableName}}</h3>
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th *ngFor="let fieldName of tableData.data.legend.i">{{fieldName}}</th>
@@ -7,7 +8,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let currentRow of tableData.data.rowSet">
-                <td *ngFor="let fieldValue of currentRow">123</td>
+                <td *ngFor="let fieldValue of currentRow">{{fieldValue}}</td>
             </tr>
         </tbody>
     </table>    

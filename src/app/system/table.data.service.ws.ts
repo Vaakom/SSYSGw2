@@ -12,6 +12,8 @@ export class TableDataServiceWs {
 
     private tableSubscriptionMap = {}
 
+    private userInfo;
+
     constructor (private webSocketService: WebSocketService){
         this.webSocketService.isOpenedSubject.subscribe((isWebsockedOpen: boolean) => {         
             if(!isWebsockedOpen) {
@@ -22,35 +24,46 @@ export class TableDataServiceWs {
             
     }
 
-    setTableSubscription(tableCode: string, operationCode: string): void{
-        let operation = operationCode;
-        if(this.tableAlreadySubscribedForOperation(tableCode, operationCode)) {
-            if(this.unsubscribe == operationCode)
-                return;
-            
-            operation = this.modify;
-        }
-        
-        this.tableSubscriptionMap[tableCode] = operationCode;
-        console.log('Set table subscription: ' + tableCode + ' ' + operationCode);
+    subscribeTable(tableCode: string): void {
+        let operationCode = this.subscribe;
 
-        let messageStr = this.createRequestString(tableCode, operationCode);
-        this.webSocketService.sendMessage(messageStr);
-        return null;        
+        if(this.isSubscriptionActive(tableCode))
+            operationCode = this.modify;
+        
+        this.changeTableSubscription(tableCode, operationCode);
+    }
+    
+
+    unsubscribeTable(tableCode: string): void {
+        if(this.unsubscribe != this.tableSubscriptionMap[tableCode])
+            this.changeTableSubscription(tableCode, this.unsubscribe);
     }
 
-    private tableAlreadySubscribedForOperation(tableCode: string, operationCode: string): boolean{
-        return this.tableSubscriptionMap[tableCode] == operationCode;
+    private isSubscriptionActive(tableCode: string): boolean {
+        return this.subscribe == this.tableSubscriptionMap[tableCode] || this.modify == this.tableSubscriptionMap[tableCode];
     }
 
     private createRequestString(tableCode: string, operationCode: string): string {
-        return 'vc=tableCommand&action=NSubscribe&data={s:[{v:"' + tableCode + '",a:"' + operationCode + '"}]}'
+        return 'vc=tableCommand&action=NSubscribe&data={s:[{v:"' + tableCode + '",a:"' + operationCode + '"}]}&s:' + this.userInfo.s;
+    }
+
+    private changeTableSubscription(tableCode: string, operationCode: string){
+        console.log('Change table subscrption: ' + tableCode + ' ' + operationCode);
+        
+        let messageStr = this.createRequestString(tableCode, operationCode);
+        this.webSocketService.sendMessage(messageStr); 
+        this.tableSubscriptionMap[tableCode] = operationCode;
+        
+        console.log(this.tableSubscriptionMap);
     }
 
      unsubscribeAllTables(): void{
          console.log('Unsubscribe All Tables');
          for(let tableCode in this.tableSubscriptionMap)
-            this.setTableSubscription(tableCode, this.unsubscribe);
+            this.unsubscribeTable(tableCode);
      }
 
+     setUserInfo(userInfo: Object){
+         this.userInfo = userInfo;
+     }
 }

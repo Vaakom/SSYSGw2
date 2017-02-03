@@ -7,6 +7,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AppComponent}   from './app.component';
 import {routing} from "./app.routing";
 import {SessionService} from "./system/session.service";
+import {HeartbitService} from "./system/heartbit.service";
 import {WebSocketService} from "./system/websocket.servcie";
 
 import {LoginFormComponent}   from './login/login-form.component';
@@ -25,13 +26,17 @@ import {TableComponent} from "./table/table.component";
 
 import {TableDataServiceWs} from "./system/table.data.service.ws";
 
+import {SessionGuard} from "./system/session.guard";
+
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
     declarations: [AppComponent, TopMenuComponent, LoginFormComponent, LogoutComponent, TableComponent],
     providers: [
         {provide: LoginService, useClass: LoginServiceWs},
+        SessionGuard,
         TableDataServiceWs,
         SessionService,
+        HeartbitService,
         WebSocketService
     ],
     bootstrap: [AppComponent]
