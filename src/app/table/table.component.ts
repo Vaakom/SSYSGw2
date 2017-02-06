@@ -21,6 +21,8 @@ export class TableComponent implements OnInit, OnDestroy{
   
   tableData: Object;
 
+  showLoadIcon: boolean = true;
+
   constructor(private tableDataService: TableDataServiceWs, 
               private route: ActivatedRoute, 
               private sessionService: SessionService,
@@ -35,6 +37,7 @@ export class TableComponent implements OnInit, OnDestroy{
       this.tableCode = params["code"];
       this.tableName = params["name"];
       this.tableData = null;
+      this.showLoadIcon = true;
       this.tableDataService.subscribeTable(this.tableCode);
     });
   }
@@ -46,8 +49,10 @@ export class TableComponent implements OnInit, OnDestroy{
   }
 
   private processTableResponse(data): void {
-      if(this.tableCode == data.data.params.type)
+      if(this.tableCode == data.data.params.type) {
+        this.showLoadIcon = false;
         this.tableData = data;        
+      }
   }
 
 }

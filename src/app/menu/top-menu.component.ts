@@ -20,6 +20,8 @@ export class TopMenuComponent implements OnInit, OnDestroy{
 
     tablesList: [Object];
 
+    showLoadIcon: boolean = true;
+
     ngOnInit(): void {
         console.log('Table menu init');        
         
@@ -38,9 +40,11 @@ export class TopMenuComponent implements OnInit, OnDestroy{
 
 
     processTableResponse(data): void {
-        if(this.tableCode == data.data.params.type)
+        if(this.tableCode == data.data.params.type) {
+            this.showLoadIcon = false;
             if(data.data.rowSet.length > 0)
                 this.tablesList = data.data.rowSet.slice(1);
+        }
     }
 
     subscribeForTableList(){
