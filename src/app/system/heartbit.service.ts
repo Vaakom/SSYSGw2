@@ -20,33 +20,33 @@ export class HeartbitService {
         this.timer = Observable.interval(this.interval)
     }    
 
-    startHeartbit(): void {
+    startHeartbit():void {
         console.log('Start heartbit');
         this.sendHeartbitMessage();
         this.timerSubscription = this.timer.subscribe(x => this.sendHeartbitMessage());    
     }
 
-    stopHeartbit(): void {
+    stopHeartbit():void {
         console.log('Stop heartbit');
         this.timerSubscription.unsubscribe();
     }
 
-    sendHeartbitMessage(){
-        console.log('Send heartbit');
+    sendHeartbitMessage():void {
+        //console.log('Send heartbit');
         let currentDate = new Date();
         let dt =  new DatePipe('en-US').transform(currentDate, 'dd.MM.yyyy HH:mm:ss.') + currentDate.getMilliseconds();
         
-        let heartbitStr = 'vc=HB&action=NHB&s=' + this.sessionId + '&data={"dt":' + dt + '}';
-        //console.log(heartbitMessage);
+        let heartbitStr = 'vc=HB&action=NHB&s=' + this.sessionId + '&data={"dt":"' + dt + '"}';
+        //console.log(heartbitStr);
         this.webSocketService.sendMessage(heartbitStr);
 
     }
 
-    setHeartbitInterval(interval: number){
+    setHeartbitInterval(interval: number):void {
         this.interval = interval;
     }
 
-    setSessionId(sessionId: string){
+    setSessionId(sessionId: string):void {
         this.sessionId = sessionId;
     }
 

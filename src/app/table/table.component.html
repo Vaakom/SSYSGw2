@@ -8,9 +8,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let currentRow of tableData.data.rowSet">
-                <td *ngFor="let fieldValue of currentRow">{{fieldValue}}</td>
+                <td *ngFor="let fieldValue of currentRow; let i = index">
+                    <span [ngSwitch]="tableData.data.legend.t[i]">
+                    <span *ngSwitchCase="'DATE'">{{fieldValue | date: 'dd.MM.yyyy HH:mm:ss'}}</span>
+                    <span *ngSwitchDefault>{{fieldValue}}</span>
+                    </span>                    
+                </td>
             </tr>
         </tbody>
     </table>    
 </div>
-
