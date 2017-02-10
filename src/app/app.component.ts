@@ -13,7 +13,6 @@ import {TableDataServiceWs} from "./system/table.data.service.ws";
 export class AppComponent implements OnInit, OnDestroy{
     
     private websocketStateSubscription: Subscription;
-    private userInfoSubscription: Subscription;
 
     constructor(private sessionService: SessionService, 
                 private webSocketService: WebSocketService,
@@ -21,21 +20,19 @@ export class AppComponent implements OnInit, OnDestroy{
     }
 
     ngOnInit(): void {
-        console.log('Application init');
         this.subscribeForWebsocketCrush();
-        this.subscribeForUserInfoChanging();
-
         this.webSocketService.start("ws://ft-depo:8088/SSYSGw/ws");
+        
+        console.log('Application init');        
     }
 
     ngOnDestroy(): void {        
         this.webSocketService.close();
         this.websocketStateSubscription.unsubscribe();
-        this.userInfoSubscription.unsubscribe();
         console.log('Application destroy');
     }
 
-    subscribeForWebsocketCrush(){
+    private subscribeForWebsocketCrush(){
         this.websocketStateSubscription = this.webSocketService.isOpenedSubject.subscribe((websockedOpen: boolean) => { 
             if(!websockedOpen && this.sessionService.isSessionOpen()) {
                 console.log("Close session because websocket closed");
@@ -44,7 +41,5 @@ export class AppComponent implements OnInit, OnDestroy{
         });
     }
 
-    subscribeForUserInfoChanging(){
-        this.sessionService.userInfoSubject.subscribe(userInfo => this.tableDataService.setUserInfo(userInfo));
-    }
+
 }

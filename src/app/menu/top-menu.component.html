@@ -1,8 +1,8 @@
 <nav class="navbar navbar-inverse bg-inverse">
   <logout></logout>
   <ul class="navbar-nav">    
-    <li class="nav-item" *ngFor="let table of tablesList">
-      <a class="nav-link" [routerLink]="['/table', table[2], table[1]]" routerLinkActive="active">{{table[1]}}</a>
+    <li class="nav-item" *ngFor="let tableMeta of tableList">
+      <a class="nav-link" [routerLink]="['/table', tableMeta.code]" routerLinkActive="active">{{tableMeta.name}}</a>
     </li>
   </ul>
 </nav>

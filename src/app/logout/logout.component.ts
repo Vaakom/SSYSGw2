@@ -36,38 +36,20 @@ export class LogoutComponent implements OnInit, OnDestroy{
     }    
 
     onClickLogout(data){
+        this.tableDataService.unsubscribeAllTables();
+        this.sessionService.closeSession();
         this.loginService.doLogout();        
+        this.router.navigate(['/'])
     }
     
     processLogoutResponse(data){
         let json = data['data'];
         if(this.dataContainErrorMessage(json))
             console.log("Logout error: " + json);
-        else {
-            this.tableDataService.unsubscribeAllTables();
-            this.sessionService.closeSession();
-            this.router.navigate(['/'])
-        }    
     }
 
     dataContainErrorMessage(data): boolean {
         return data['r'] == false;
     }
 
-    // onClickTestSign(data){
-    //     console.log("subscribe/unsubscribe FV_D_PARAMS");
-    //     this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.subscribe);
-    //     this.tableDataService.setTableSubscription("FV_D_PARAMS", this.tableDataService.unsubscribe);
-    // }    
-
-    // onClickTestModify(data){        
-    //     if(this.termsSybscribed){
-    //         console.log("modify subscription FV_TERMS");
-    //         this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.modify);
-    //     } else {
-    //         this.termsSybscribed = true;
-    //         console.log("subscribe FV_TERMS");
-    //         this.tableDataService.setTableSubscription("FV_TERMS", this.tableDataService.subscribe);
-    //     }    
-    // }
 }

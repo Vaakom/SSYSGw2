@@ -1,16 +1,18 @@
-<div *ngIf="tableData!=null">
+<div>
     <!--<div *ngIf="tableData!=null">-->
-    <h3>{{tableName}}</h3>
-    <table class="table table-striped table-hover">
+    <h3>{{tableMeta.name}}</h3>
+    <table class="table table-striped table-hover mb-5">
         <thead>
             <tr>
-                <th *ngFor="let fieldName of tableData.data.legend.i">{{fieldName}}</th>
+                <th *ngFor="let fieldName of tableMeta.legend.i" (click) = "setSortColumn(fieldName)">
+                    {{fieldName}}
+                </th>
             </tr>
         </thead>
-        <tbody>
-            <tr *ngFor="let currentRow of tableData.data.rowSet">
+        <tbody *ngIf="rowSet != null">
+            <tr *ngFor="let currentRow of rowSet">
                 <td *ngFor="let fieldValue of currentRow; let i = index">
-                    <span [ngSwitch]="tableData.data.legend.t[i]">
+                    <span [ngSwitch]="tableMeta.legend.t[i]">
                     <span *ngSwitchCase="'DATE'">{{fieldValue | date: 'dd.MM.yyyy HH:mm:ss'}}</span>
                     <span *ngSwitchDefault>{{fieldValue}}</span>
                     </span>                    

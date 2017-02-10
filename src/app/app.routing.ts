@@ -6,6 +6,6 @@ import {TableComponent} from "./table/table.component";
 import {SessionGuard} from "./system/session.guard";
 
 export const routing = RouterModule.forRoot([
-    {path: 'table/:code/:name', component: TableComponent, canActivate: [SessionGuard]},
+    {path: 'table/:code', component: TableComponent, canActivate: [SessionGuard]},
     {path: '**', component: LoginFormComponent}
 ]);

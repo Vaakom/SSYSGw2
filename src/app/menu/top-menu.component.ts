@@ -4,12 +4,16 @@ import {SessionService} from "../system/session.service";
 import {TableDataServiceWs} from "../system/table.data.service.ws";
 import {WebSocketService} from "../system/websocket.servcie";
 
+import {SocketData} from "../system/socket.data";
+import {TableMeta} from "../table/table.meta";
+import {TableLegend} from "../table/table.legend";
+
 @Component({
     selector: 'top-menu',
     templateUrl: 'top-menu.component.html'
 })
 
-export class TopMenuComponent implements OnInit, OnDestroy{
+export class TopMenuComponent implements OnInit, OnDestroy {
 
     private tableCode = 'FV_SYSTEM';
 
@@ -18,15 +22,22 @@ export class TopMenuComponent implements OnInit, OnDestroy{
 
     constructor(private tableDataService: TableDataServiceWs, private sessionService: SessionService, private webSocketService: WebSocketService){}
 
-    tablesList: [Object];
+    tableList: [TableMeta];
 
     showLoadIcon: boolean = true;
 
     ngOnInit(): void {
         console.log('Table menu init');        
         
-        this.tableSubscription = this.webSocketService.getMessageSubjectByName('table').subscribe(data => this.processTableResponse(data));
-        this.sessionOpenSubscription = this.sessionService.sessionOpenSubject.subscribe((isSessionOpen: boolean) => {
+        this.tableSubscription = this.webSocketService.getMessageSubjectByName('table')
+            .filter((data: SocketData) => this.tableCode == data.data.params.type)
+            .map((data: SocketData) => this.createTableList(data.data.rowSet))
+            .subscribe((data: [TableMeta]) => {
+                this.processTableResponse(data);
+            });
+        
+        
+        this.sessionOpenSubscription = this.sessionService.getSessionOpenSubject().subscribe((isSessionOpen: boolean) => {
             isSessionOpen ? this.subscribeForTableList() : this.cleanTableList();
         });
     }
@@ -38,23 +49,45 @@ export class TopMenuComponent implements OnInit, OnDestroy{
         console.log('Table menu destroy');
     }
 
-
-    processTableResponse(data): void {
-        if(this.tableCode == data.data.params.type) {
-            this.showLoadIcon = false;
-            if(data.data.rowSet.length > 0)
-                this.tablesList = data.data.rowSet.slice(1);
+    private createTableList(rowSet: [[string]]): Array<TableMeta> {
+        let tableMetaList: Array<TableMeta> = [];
+        for(let row of rowSet){
+            let tableMeta = this.createTableMeta(row); 
+            if(tableMeta.code != 'FV_SYSTEM')
+                tableMetaList.push(tableMeta);
         }
+        return tableMetaList;        
     }
 
-    subscribeForTableList(){
+    private createTableMeta(row: [string]): TableMeta {
+        let tableMeta = new TableMeta();
+        
+        tableMeta.id = +row[0];
+        tableMeta.name = row[1];
+        tableMeta.code = row[2];
+        tableMeta.mode = row[3];
+        tableMeta.date = row[4];
+        tableMeta.isArchSupport = row[6];
+        tableMeta.changeId = +row[7];
+
+        let legend = Object.assign(new TableLegend(), JSON.parse(row[5]));        
+        tableMeta.legend = legend;
+        
+        return tableMeta;
+    }
+
+    private processTableResponse(data: [TableMeta]): void {
+            this.tableList = data;            
+            this.sessionService.setTableList(this.tableList);
+            this.showLoadIcon = false;
+    }
+
+    private subscribeForTableList(): void {
         this.tableDataService.subscribeTable(this.tableCode);
     }
 
-    cleanTableList(){
-//        this.tableDataService.setTableSubscription(this.tableCode, this.tableDataService.unsubscribe);
-//        this.tablesList = null;
+    private cleanTableList(): void {
+        this.tableList = null;
     }
-
 
 }

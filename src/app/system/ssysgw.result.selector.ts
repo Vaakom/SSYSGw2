@@ -1,28 +1,32 @@
+import { SocketData} from "./socket.data";
+
 export class SSYSGwResultSelector {
     
     static resultSelector = function(messageEvent: MessageEvent): Object {
-        let resultObject;
-        if(SSYSGwResultSelector.isSystemMessageReply(messageEvent.data))
-            resultObject = SSYSGwResultSelector.processSystemMessageReply(messageEvent.data);
+        let socketData : SocketData;
+
+        if(SSYSGwResultSelector.replyIsSystemMessage(messageEvent.data))
+            socketData = SSYSGwResultSelector.stringToSystemMessage(messageEvent.data);
         else
-            resultObject =  SSYSGwResultSelector.processTableMessageReply(messageEvent.data);
-        console.log(resultObject);
-        return resultObject;
+            socketData =  SSYSGwResultSelector.stringToTableMessage(messageEvent.data);
+        
+        console.log(socketData);
+        return socketData;
     }
 
-    private static resultStringToObject(resultString: string) : Object {
+    private static resultStringToObject(resultString: string) : SocketData {
+        let socketData = new SocketData();
         if(!resultString)
-            return {};
+            return socketData;
                 
         let pairArray = resultString.split('&');
         
-        let resultObject = {};
         for( let pair of pairArray){
             let attrAndValue = SSYSGwResultSelector.pairToArray(pair);
-            resultObject[attrAndValue[0]] = attrAndValue[1];
+            socketData[attrAndValue[0]] = attrAndValue[1];
         }
 
-        return resultObject;
+        return socketData;
     }
 
     private static pairToArray(pair :string): string[] {
@@ -33,36 +37,43 @@ export class SSYSGwResultSelector {
         return attrAndValue;
     }
 
-    private static isSystemMessageReply(data: string): boolean {
+    private static replyIsSystemMessage(data: string): boolean {
         return data && data.startsWith('type=reply');
     }
 
-    private static processSystemMessageReply(data: string): Object {
-        let resultObject;
+    private static stringToSystemMessage(data: string): SocketData {
+        let socketData = SSYSGwResultSelector.resultStringToObject(data);
         try {
-            resultObject = SSYSGwResultSelector.resultStringToObject(data);            
-            if(resultObject['data'])
-                resultObject['data'] = JSON.parse(resultObject['data']);
+            if(socketData.data)
+                socketData.data = JSON.parse(socketData.data);
         } catch (err){
-            resultObject = {vc: 'table', r: 'false', data: err + ' data: '+ data};
-            console.log(resultObject);
+            socketData = new SocketData();
+            socketData.r = false;
+            socketData.data =  err + ' data: '+ data;
+            
+            console.log(socketData);
         }
 
-        return resultObject;
+        return socketData;
     }
     
-    private static processTableMessageReply(data: string): Object {
-        let resultObject;
+    private static stringToTableMessage(data: string): SocketData {
+        let socketData = new SocketData();
         
         try {
-            let resultData = JSON.parse(data);
-            resultObject = {vc: 'table', r: 'true', data: resultData};
+            socketData.data = JSON.parse(data);
+            socketData.vc = 'table';
+            socketData.r = true;
+            socketData.type = 'reply';
+            
         } catch (err){
-            resultObject = {vc: 'table', r: 'false', data: err + ' data: '+ data};
-            console.log(resultObject);
+            socketData.vc = 'table';
+            socketData.r = false;
+            socketData.type = 'reply';
+            socketData.data = err + ' data: '+ data;
+            console.log('Result Selector error: ' + err);
         }
-        // console.log("Table message:")
-        // 
-        return resultObject;
+
+        return socketData;
     }
 }
