@@ -28,11 +28,12 @@ export class WebSocketService{
         return this.messageMap[name] ? this.messageMap[name] : this.messageMap['other'];
     }
 
-    public start(url:string): void {
-        this.url = url;
+    public start(url?:string): void {
+        if(url)
+            this.url = url;
         
         let webSocketConfig = {
-            url: url, 
+            url: this.url, 
             resultSelector: SSYSGwResultSelector.resultSelector 
         };
 

@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, EventEmitter, Output} from '@angular/core'
 import {FormGroup, FormControl, Validators} from "@angular/forms";
 import {Subject, Observable, Subscription} from "rxjs/Rx";
 
-import {LoginService} from "./login.service";
+import {LoginServiceWs} from "./login.service.ws";
 import {LoginData} from "./login.data";
 import {SessionService} from "../system/session.service";
 import {WebSocketService} from "../system/websocket.servcie";
@@ -25,7 +25,7 @@ export class LoginFormComponent implements OnInit, OnDestroy{
         password: new FormControl('', Validators.required)
     })
     
-    constructor(private loginService: LoginService, private sessionService: SessionService, private webSocketService: WebSocketService) {
+    constructor(private loginService: LoginServiceWs, private sessionService: SessionService, private webSocketService: WebSocketService) {
     }
 
     ngOnInit(): void {
@@ -43,8 +43,10 @@ export class LoginFormComponent implements OnInit, OnDestroy{
     }
 
     onClickLogin(){
-        if(!this.webSocketService.isOpened())
-            this.webSocketService.reconnect();
+        if(!this.webSocketService.isOpened()){
+            console.log('Repoen WebSocket')
+            this.webSocketService.start();
+        }
 
         this.loginService.doLogin(this.loginData);
     }

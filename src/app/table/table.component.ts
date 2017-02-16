@@ -1,6 +1,7 @@
-import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
-import {Subject, Observable, Subscription} from "rxjs/Rx";
+import {Component, OnInit, OnDestroy, OnChanges, Sanitizer, SecurityContext} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {DomSanitizer} from '@angular/platform-browser';
+import {Subject, Observable, Subscription} from "rxjs/Rx";
 
 import {SessionService} from "../system/session.service";
 import {TableDataServiceWs} from "../system/table.data.service.ws";
@@ -19,22 +20,23 @@ export class TableComponent implements OnInit, OnDestroy{
   private tableSubscription: Subscription;
 
   private rowsOnPage = 10;
+  private showPages = 10;
   
   tableCode: string;
 
   tableMeta: TableMeta;
   
-  rowSet: [string];
+  rowSet;
 
   tableConfig: TableConfig;
 
   showLoadIcon: boolean = true;
 
   constructor(private route: ActivatedRoute,
+              private sanitizer: DomSanitizer,
               private tableDataService: TableDataServiceWs,                
               private sessionService: SessionService,
-              private webSocketService: WebSocketService,
-              ) {
+              private webSocketService: WebSocketService) {
   }
 
   ngOnInit(): void {
@@ -54,9 +56,16 @@ export class TableComponent implements OnInit, OnDestroy{
     this.tableSubscription.unsubscribe();
   }
 
+  private selectNewPage(pageNum: number){
+    console.log(pageNum);
+    this.tableConfig.setCurrentPage(pageNum);
+    this.tableDataService.subscribeTable(this.tableCode, this.tableConfig);
+  }
+
   private processTableResponse(data: SocketData): void {
       this.showLoadIcon = false;
-      this.rowSet = data.data.rowSet;
+      this.tableConfig.setTotalRows(data.data.params.nm);
+      this.rowSet = data.data.rowSet
   }
 
   private initNewTable(tableCode: string): void {
@@ -82,7 +91,7 @@ export class TableComponent implements OnInit, OnDestroy{
   }
 
   private setNewTableConfig(): void {
-    this.tableConfig = new TableConfig(1, this.rowsOnPage, this.tableMeta.legend.i[0]);
+    this.tableConfig = new TableConfig(1, this.rowsOnPage, this.tableMeta.legend.i[0], 0);
   }
 
   //TODO сделать общее обновление tableConfig через ractive с проверкой повторов и задержкой.

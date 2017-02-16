@@ -1,7 +1,6 @@
 <div>
-    <!--<div *ngIf="tableData!=null">-->
-    <h3>{{tableMeta.name}}</h3>
-    <table class="table table-striped table-hover mb-5">
+    <h3 class="mt-2">{{tableMeta.name}}</h3>
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th *ngFor="let fieldName of tableMeta.legend.i" (click) = "setSortColumn(fieldName)">
@@ -11,15 +10,19 @@
         </thead>
         <tbody *ngIf="rowSet != null">
             <tr *ngFor="let currentRow of rowSet">
-                <td *ngFor="let fieldValue of currentRow; let i = index">
-                    <span [ngSwitch]="tableMeta.legend.t[i]">
-                    <span *ngSwitchCase="'DATE'">{{fieldValue | date: 'dd.MM.yyyy HH:mm:ss'}}</span>
-                    <span *ngSwitchDefault>{{fieldValue}}</span>
-                    </span>                    
+                <td *ngFor="let fieldValue of currentRow; let i = index" [ngSwitch]="tableMeta.legend.t[i]">
+                        <span *ngSwitchCase="'DATE'" style="word-break: break-word">{{fieldValue}}</span>
+                        <span *ngSwitchDefault style="word-break: break-word">{{fieldValue}}</span>
                 </td>
             </tr>
         </tbody>
-    </table>    
+    </table>        
+    <paginator 
+        [currentPage] = "tableConfig.currentPage" 
+        [rowsOnPage] = "tableConfig.rowsOnPage" 
+        [totalRows] = "tableConfig.totalRows"
+        [showPages] = "showPages"
+        (onPageSelected)="selectNewPage($event)"></paginator>
 </div>
 
 <div class="text-center mt-5" *ngIf="showLoadIcon">

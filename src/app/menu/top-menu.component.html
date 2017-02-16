@@ -1,5 +1,5 @@
 <nav class="navbar navbar-inverse bg-inverse">
-  <logout></logout>
+  <logout class="mt-2"></logout>
   <ul class="navbar-nav">    
     <li class="nav-item" *ngFor="let tableMeta of tableList">
       <a class="nav-link" [routerLink]="['/table', tableMeta.code]" routerLinkActive="active">{{tableMeta.name}}</a>

@@ -2,11 +2,13 @@ export class TableConfig {
     private currentPage: number;
     private rowsOnPage: number;
     private orderBy: string;
+    private totalRows: number;
     
-    constructor(currentPage: number, maxRows: number, orderBy: string) {
+    constructor(currentPage: number, rowsOnPage: number, orderBy: string, totalRows: number) {
         this.currentPage = currentPage;
-        this.rowsOnPage = maxRows;
+        this.rowsOnPage = rowsOnPage;
         this.orderBy = orderBy;
+        this.totalRows = totalRows;
     }
 
     getCurrentPage(): number {
@@ -31,6 +33,14 @@ export class TableConfig {
 
     setOrderBy(orderBy: string): void {
         this.orderBy = orderBy;
+    }
+
+    getTotalRows(): number {
+        return this.totalRows;
+    }
+
+    setTotalRows(totalRows: number){
+        this.totalRows = totalRows;
     }
 
 }

@@ -5,15 +5,11 @@ import {Observable, Subscription} from "rxjs/Rx";
 import {SessionService} from "../system/session.service";
 import {WebSocketService} from "../system/websocket.servcie";
 import {TableDataServiceWs} from "../system/table.data.service.ws";
-import {LoginService} from "../login/login.service";
+import {LogoutServiceWs} from "../logout/logout.service";
 
 @Component({
     selector: 'logout',
-    template: `
-        <button class="btn btn-outline-secondary btn-block mb-2" (click)="onClickLogout()">Sign out</button><br>
-    `
-        // <button class="btn btn-outline-secondary btn-block mb-2" (click)="onClickTestSign()">Test subscribe/unsubscribe</button>
-        // <button class="btn btn-outline-secondary btn-block mb-2" (click)="onClickTestModify()">Test subscribe/modify</button>
+    templateUrl: 'logout.component.html'
 })
 
 export class LogoutComponent implements OnInit, OnDestroy{
@@ -22,7 +18,7 @@ export class LogoutComponent implements OnInit, OnDestroy{
     private logoutSubscriptioon: Subscription;
 
     constructor(private tableDataService: TableDataServiceWs,
-                private loginService: LoginService, 
+                private logoutService: LogoutServiceWs, 
                 private sessionService: SessionService, 
                 private webSocketService: WebSocketService,
                 private router: Router){}
@@ -38,7 +34,7 @@ export class LogoutComponent implements OnInit, OnDestroy{
     onClickLogout(data){
         this.tableDataService.unsubscribeAllTables();
         this.sessionService.closeSession();
-        this.loginService.doLogout();        
+        this.logoutService.doLogout();        
         this.router.navigate(['/'])
     }
     
