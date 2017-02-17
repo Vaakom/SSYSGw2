@@ -19,7 +19,6 @@ export class PaginatorComponent {
     pageArray: Array<number>;
 
     ngOnChanges() {
-        console.log(this.showPages);
         this.totalPages = this.getTotalPages();
         this.previousPage = this.getPreviousPage();
         this.nextPage = this.getNextPage();
@@ -32,7 +31,7 @@ export class PaginatorComponent {
 
     getPageArray(): Array<number> {
         let middlePage = this.calculateMiddlePage();
-        console.log('middlePage: ' + middlePage);
+        // console.log('middlePage: ' + middlePage);
         if(this.currentPage <= middlePage || this.totalPages < this.showPages)
             return this.createPageNumArray(1);
 
@@ -51,9 +50,9 @@ export class PaginatorComponent {
             counter++;
             pageNum++;
         }
-        console.log('startPage:' + startPage + 'totalPages:' + this.totalPages);        
-        console.log(array);
-        console.log();
+        // console.log('startPage:' + startPage + 'totalPages:' + this.totalPages);        
+        // console.log(array);
+        // console.log();
         return array;
     }    
 

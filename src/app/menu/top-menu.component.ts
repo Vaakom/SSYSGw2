@@ -1,5 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subject, Observable, Subscription} from "rxjs/Rx";
+import {FormGroup, FormControl} from '@angular/forms';
 import {SessionService} from "../system/session.service";
 import {TableDataServiceWs} from "../system/table.data.service.ws";
 import {WebSocketService} from "../system/websocket.servcie";
@@ -26,6 +27,10 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
     showLoadIcon: boolean = true;
 
+    form: FormGroup = new FormGroup({
+        menuFilterControl: new FormControl()
+    })  
+    
     ngOnInit(): void {
         console.log('Table menu init');        
         
@@ -40,6 +45,8 @@ export class TopMenuComponent implements OnInit, OnDestroy {
         this.sessionOpenSubscription = this.sessionService.getSessionOpenSubject().subscribe((isSessionOpen: boolean) => {
             isSessionOpen ? this.subscribeForTableList() : this.cleanTableList();
         });
+
+        this.initMenuFilter();
     }
 
     ngOnDestroy(): void {
@@ -88,6 +95,22 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
     private cleanTableList(): void {
         this.tableList = null;
+    }
+    
+    private initMenuFilter(){
+        let menuFilterControlSubscription = this.form.controls['menuFilterControl']
+            .valueChanges.debounceTime(100).map(str => str ? str.toLowerCase() : str);
+
+        menuFilterControlSubscription.subscribe(tableName => this.filterMenuByTableName(tableName));
+    }
+
+    private filterMenuByTableName(tableName: string){
+        for(let tMeta of this.tableList) {
+            if(tableName)
+                tMeta.isVisible = tMeta.name.toLowerCase().indexOf(tableName) == 0;
+            else 
+                tMeta.isVisible = true;
+        }
     }
 
 }

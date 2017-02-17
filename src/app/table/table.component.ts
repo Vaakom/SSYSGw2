@@ -32,6 +32,7 @@ export class TableComponent implements OnInit, OnDestroy{
 
   showLoadIcon: boolean = true;
 
+
   constructor(private route: ActivatedRoute,
               private sanitizer: DomSanitizer,
               private tableDataService: TableDataServiceWs,                
@@ -48,12 +49,28 @@ export class TableComponent implements OnInit, OnDestroy{
     this.route.params.subscribe(params => {      
       this.initNewTable(params["code"]);
     });
+  
   }
-
 
   ngOnDestroy(): void {
     console.log('TableComponent destroy');
     this.tableSubscription.unsubscribe();
+  }
+
+  //TODO сделать общее обновление tableConfig через ractive с проверкой повторов и задержкой.
+  setSortColumn(column: string){
+    let sortASC = column == this.tableConfig.getOrderBy() ? !this.tableConfig.isSortASC() : true;
+
+    this.tableConfig.setSortASC(sortASC);
+    this.tableConfig.setOrderBy(column);
+    this.tableDataService.subscribeTable(this.tableCode, this.tableConfig);
+  }
+
+  getSortIcon(i){
+    if(this.tableMeta.legend.t[i] == "STRING")
+      return this.tableConfig.isSortASC() ? "fa-sort-alpha-asc" : "fa-sort-alpha-desc";
+
+    return this.tableConfig.isSortASC() ? "fa-sort-numeric-asc" : "fa-sort-numeric-desc";
   }
 
   private selectNewPage(pageNum: number){
@@ -91,12 +108,7 @@ export class TableComponent implements OnInit, OnDestroy{
   }
 
   private setNewTableConfig(): void {
-    this.tableConfig = new TableConfig(1, this.rowsOnPage, this.tableMeta.legend.i[0], 0);
+    this.tableConfig = new TableConfig(1, this.rowsOnPage, this.tableMeta.legend.i[0], true, 0);
   }
 
-  //TODO сделать общее обновление tableConfig через ractive с проверкой повторов и задержкой.
-  setSortColumn(column: string){
-    this.tableConfig.setOrderBy(column);
-    this.tableDataService.subscribeTable(this.tableCode, this.tableConfig);
-  }
 }

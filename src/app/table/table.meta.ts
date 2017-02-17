@@ -9,4 +9,6 @@ export class TableMeta {
     legend: TableLegend;
     isArchSupport: string;
     changeId: number;
+
+    isVisible: boolean = true;
 }

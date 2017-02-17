@@ -1,9 +1,14 @@
 <nav class="navbar navbar-inverse bg-inverse">
   <logout class="mt-2"></logout>
-  <ul class="navbar-nav">    
-    <li class="nav-item" *ngFor="let tableMeta of tableList">
-      <a class="nav-link" [routerLink]="['/table', tableMeta.code]" routerLinkActive="active">{{tableMeta.name}}</a>
+  <form [formGroup]="form">  
+    <input class="form-control mr-sm-2" type="text" placeholder="Table name" formControlName="menuFilterControl">
+  </form>
+  <ul class="navbar-nav">
+    <template ngFor let-tableMeta [ngForOf]="tableList">
+    <li class="nav-item" *ngIf="tableMeta.isVisible">
+        <a class="nav-link" [routerLink]="['/table', tableMeta.code]" routerLinkActive="active">{{tableMeta.name}}</a>
     </li>
+    </template>
   </ul>
 </nav>
 <div class="text-center mt-5" *ngIf="showLoadIcon">

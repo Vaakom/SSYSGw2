@@ -36,7 +36,8 @@ export class TableDataServiceWs {
         }
 
         if(tableConfig){
-            params['o'] = tableConfig.getOrderBy();
+            let sortDirection = tableConfig.isSortASC() ? 'A' : 'D';
+            params['o'] = tableConfig.getOrderBy() + ' ' + sortDirection;
             params['s'] = tableConfig.getFirstRow();
             params['e'] = tableConfig.getLastRow();
         }        
