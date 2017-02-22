@@ -1,8 +1,6 @@
 <nav class="navbar navbar-inverse bg-inverse">
   <logout class="mt-2"></logout>
-  <form [formGroup]="form">  
-    <input class="form-control mr-sm-2" type="text" placeholder="Table name" formControlName="menuFilterControl">
-  </form>
+    <input class="form-control mr-sm-2" type="text" placeholder="Table name" [formControl]="menuFilterControl">
   <ul class="navbar-nav">
     <template ngFor let-tableMeta [ngForOf]="tableList">
     <li class="nav-item" *ngIf="tableMeta.isVisible">

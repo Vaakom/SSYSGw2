@@ -3,6 +3,8 @@ export class TableConfig {
     private rowsOnPage: number;
     private orderBy: string;
     private sortASC: boolean;
+    private filter: string;
+
     private totalRows: number;
     
     constructor(currentPage: number, rowsOnPage: number, orderBy: string, sortASC: boolean, totalRows: number) {
@@ -17,7 +19,7 @@ export class TableConfig {
         return this.currentPage
     }
 
-    setCurrentPage(currentPage: number): void{
+    setCurrentPage(currentPage: number): void {
         this.currentPage = currentPage;
     }
 
@@ -41,7 +43,7 @@ export class TableConfig {
         return this.totalRows;
     }
 
-    setTotalRows(totalRows: number){
+    setTotalRows(totalRows: number): void{
         this.totalRows = totalRows;
     }
 
@@ -51,6 +53,14 @@ export class TableConfig {
 
     setSortASC(sortASC: boolean): void {
         this.sortASC = sortASC;
+    }
+
+    getFilter(): string{
+        return this.filter;
+    }
+
+    setFilter(filter: string): void {
+        this.filter = filter
     }
 
 }

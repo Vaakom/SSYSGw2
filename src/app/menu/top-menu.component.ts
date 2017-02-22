@@ -27,9 +27,10 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
     showLoadIcon: boolean = true;
 
-    form: FormGroup = new FormGroup({
-        menuFilterControl: new FormControl()
-    })  
+    menuFilterControl = new FormControl();
+    // form: FormGroup = new FormGroup({
+    //     menuFilterControl: new FormControl()
+    // })  
     
     ngOnInit(): void {
         console.log('Table menu init');        
@@ -37,9 +38,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
         this.tableSubscription = this.webSocketService.getMessageSubjectByName('table')
             .filter((data: SocketData) => this.tableCode == data.data.params.type)
             .map((data: SocketData) => this.createTableList(data.data.rowSet))
-            .subscribe((data: [TableMeta]) => {
-                this.processTableResponse(data);
-            });
+            .subscribe((data: [TableMeta]) => {this.processTableResponse(data)});
         
         
         this.sessionOpenSubscription = this.sessionService.getSessionOpenSubject().subscribe((isSessionOpen: boolean) => {
@@ -98,8 +97,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     }
     
     private initMenuFilter(){
-        let menuFilterControlSubscription = this.form.controls['menuFilterControl']
-            .valueChanges.debounceTime(100).map(str => str ? str.toLowerCase() : str);
+        let menuFilterControlSubscription = this.menuFilterControl.valueChanges.debounceTime(100).map(str => str ? str.toLowerCase() : str);
 
         menuFilterControlSubscription.subscribe(tableName => this.filterMenuByTableName(tableName));
     }

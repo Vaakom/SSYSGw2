@@ -40,6 +40,9 @@ export class TableDataServiceWs {
             params['o'] = tableConfig.getOrderBy() + ' ' + sortDirection;
             params['s'] = tableConfig.getFirstRow();
             params['e'] = tableConfig.getLastRow();
+            
+            if(tableConfig.getFilter())
+                params['f'] = tableConfig.getFilter();
         }        
         
         let message = this.createMessageString(params);
