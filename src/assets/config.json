@@ -1,0 +1,4 @@
+{
+  "gatewayUrl": "ws://ft-depo:8088/SSYSGw/ws",
+  "heartbitInterval":"5000"
+}

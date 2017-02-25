@@ -28,19 +28,16 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     showLoadIcon: boolean = true;
 
     menuFilterControl = new FormControl();
-    // form: FormGroup = new FormGroup({
-    //     menuFilterControl: new FormControl()
-    // })  
-    
+
     ngOnInit(): void {
-        console.log('Table menu init');        
-        
+        console.log('Table menu init');
+
         this.tableSubscription = this.webSocketService.getMessageSubjectByName('table')
             .filter((data: SocketData) => this.tableCode == data.data.params.type)
             .map((data: SocketData) => this.createTableList(data.data.rowSet))
             .subscribe((data: [TableMeta]) => {this.processTableResponse(data)});
-        
-        
+
+
         this.sessionOpenSubscription = this.sessionService.getSessionOpenSubject().subscribe((isSessionOpen: boolean) => {
             isSessionOpen ? this.subscribeForTableList() : this.cleanTableList();
         });
@@ -51,23 +48,23 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.tableSubscription.unsubscribe();
         this.sessionOpenSubscription.unsubscribe();
-        
+
         console.log('Table menu destroy');
     }
 
     private createTableList(rowSet: [[string]]): Array<TableMeta> {
         let tableMetaList: Array<TableMeta> = [];
         for(let row of rowSet){
-            let tableMeta = this.createTableMeta(row); 
+            let tableMeta = this.createTableMeta(row);
             if(tableMeta.code != 'FV_SYSTEM')
                 tableMetaList.push(tableMeta);
         }
-        return tableMetaList;        
+        return tableMetaList;
     }
 
     private createTableMeta(row: [string]): TableMeta {
         let tableMeta = new TableMeta();
-        
+
         tableMeta.id = +row[0];
         tableMeta.name = row[1];
         tableMeta.code = row[2];
@@ -76,14 +73,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
         tableMeta.isArchSupport = row[6];
         tableMeta.changeId = +row[7];
 
-        let legend = Object.assign(new TableLegend(), JSON.parse(row[5]));        
+        let legend = Object.assign(new TableLegend(), JSON.parse(row[5]));
         tableMeta.legend = legend;
-        
+
         return tableMeta;
     }
 
     private processTableResponse(data: [TableMeta]): void {
-            this.tableList = data;            
+            this.tableList = data;
             this.sessionService.setTableList(this.tableList);
             this.showLoadIcon = false;
     }
@@ -95,7 +92,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
     private cleanTableList(): void {
         this.tableList = null;
     }
-    
+
     private initMenuFilter(){
         let menuFilterControlSubscription = this.menuFilterControl.valueChanges.debounceTime(100).map(str => str ? str.toLowerCase() : str);
 
@@ -106,7 +103,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
         for(let tMeta of this.tableList) {
             if(tableName)
                 tMeta.isVisible = tMeta.name.toLowerCase().indexOf(tableName) == 0;
-            else 
+            else
                 tMeta.isVisible = true;
         }
     }

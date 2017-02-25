@@ -11,39 +11,36 @@ import {HeartbitService} from "./system/heartbit.service";
 import {WebSocketService} from "./system/websocket.servcie";
 
 import {LoginFormComponent}   from './login/login-form.component';
-import {LoginService} from "./login/login.service";
-import {LoginServiceHttp} from "./login/login.service.http";
 import {LoginServiceWs} from "./login/login.service.ws";
-import {LoginServiceMock} from "./login/login.service.mock";
 
 import {LogoutComponent}   from "./logout/logout.component";
 import {LogoutServiceWs} from "./logout/logout.service";
 
 import {TopMenuComponent} from "./menu/top-menu.component";
-import {TopMenuService} from "./menu/top-menu.service";
-import {TopMenuServiceHttp} from "./menu/top-menu.service.http";
-import {TopMenuServiceMock} from "./menu/top-menu.service.mock";
 import {TableComponent} from "./table/table.component";
 import {PaginatorComponent} from "./table/paginator.component";
 
 import {TableDataServiceWs} from "./system/table.data.service.ws";
 
+import {ConfigGuard} from "./system/config.guard";
 import {SessionGuard} from "./system/session.guard";
 import {SplitPipe} from "./system/split.pipe";
 
+
 @NgModule({
-    imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
-    declarations: [AppComponent, TopMenuComponent, LoginFormComponent, LogoutComponent, TableComponent, PaginatorComponent, SplitPipe],
-    providers: [
-        LoginServiceWs,
-        LogoutServiceWs,
-        SessionGuard,
-        TableDataServiceWs,
-        SessionService,
-        HeartbitService,
-        WebSocketService
-    ],
-    bootstrap: [AppComponent]
+  imports: [BrowserModule, FormsModule, ReactiveFormsModule, HttpModule, JsonpModule, routing, NgbModule, NgbModule.forRoot()],
+  declarations: [AppComponent, TopMenuComponent, LoginFormComponent, LogoutComponent, TableComponent, PaginatorComponent, SplitPipe],
+  providers: [
+    LoginServiceWs,
+    LogoutServiceWs,
+    SessionGuard,
+    ConfigGuard,
+    TableDataServiceWs,
+    SessionService,
+    HeartbitService,
+    WebSocketService
+  ],
+  bootstrap: [AppComponent]
 })
 
 export class AppModule {

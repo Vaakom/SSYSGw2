@@ -7,55 +7,85 @@ import {TableMeta} from "../table/table.meta";
 @Injectable()
 export class SessionService {
 
-    private userInfoSubject = new BehaviorSubject<Object>(null);    
-    private sessionOpenSubject = new BehaviorSubject<boolean>(false);
-    private tableListSubject = new BehaviorSubject<[TableMeta]>(null);
-    
-    constructor(private heartbitService: HeartbitService){
-    }
+  private userInfoSubject = new BehaviorSubject<Object>(null);
+  private sessionOpenSubject = new BehaviorSubject<boolean>(false);
+  private tableListSubject = new BehaviorSubject<[TableMeta]>(null);
 
-    openSession(userInfo: Object): void {
-        this.userInfoSubject.next(userInfo);
-        this.sessionOpenSubject.next(true);
-        
-        this.heartbitService.setHeartbitInterval(5000);
-        this.heartbitService.setSessionId(this.getUserInfo()['s']);        
-        this.heartbitService.startHeartbit();
-    }
+  private config: Object;
 
-    closeSession(): void {
-        //TODO some clean operations
-        this.sessionOpenSubject.next(false);
-        this.userInfoSubject.next(null);
-        this.tableListSubject.next(null);
-        this.heartbitService.stopHeartbit();
-    }
+  private globalMessage: string;
+  private globalError: string;
 
-    isSessionOpen(): boolean {
-        return this.sessionOpenSubject.getValue();
-    }
+  constructor(private heartbitService: HeartbitService) {
+  }
 
-    getUserInfo(): Object {
-        return this.userInfoSubject.getValue();
-    }
+  openSession(userInfo: Object): void {
+    this.userInfoSubject.next(userInfo);
+    this.sessionOpenSubject.next(true);
 
-    getTableList(): [TableMeta] {
-        return this.tableListSubject.getValue();
-    }
+    this.heartbitService.setHeartbitInterval(this.config['heartbitInterval']);
+    this.heartbitService.setSessionId(this.getUserInfo()['s']);
+    this.heartbitService.startHeartbit();
+  }
 
-    setTableList(tableList: [TableMeta]): void {
-        return this.tableListSubject.next(tableList);
-    }
+  closeSession(): void {
+    this.sessionOpenSubject.next(false);
+    this.userInfoSubject.next(null);
+    this.tableListSubject.next(null);
+    this.heartbitService.stopHeartbit();
+  }
 
-    getUserInfoSubject(): BehaviorSubject<Object> {
-        return this.userInfoSubject;
-    }
+  isSessionOpen(): boolean {
+    return this.sessionOpenSubject.getValue();
+  }
 
-    getSessionOpenSubject(): BehaviorSubject<Object>{
-        return this.sessionOpenSubject;
-    }
+  getUserInfo(): Object {
+    return this.userInfoSubject.getValue();
+  }
 
-    getTableListSubject(): BehaviorSubject<[Object]> {
-        return this.tableListSubject
-    }
+  getTableList(): [TableMeta] {
+    return this.tableListSubject.getValue();
+  }
+
+  setTableList(tableList: [TableMeta]): void {
+    return this.tableListSubject.next(tableList);
+  }
+
+  getUserInfoSubject(): BehaviorSubject<Object> {
+    return this.userInfoSubject;
+  }
+
+  getSessionOpenSubject(): BehaviorSubject<Object> {
+    return this.sessionOpenSubject;
+  }
+
+  getTableListSubject(): BehaviorSubject<[Object]> {
+    return this.tableListSubject
+  }
+
+
+  getConfig(): Object {
+    return this.config;
+  }
+
+  setConfig(value: Object) {
+    this.config = value;
+  }
+
+
+  getGlobalMessage(): string {
+    return this.globalMessage;
+  }
+
+  setGlobalMessage(value: string) {
+    this.globalMessage = value;
+  }
+
+  getGlobalError(): string {
+    return this.globalError;
+  }
+
+  setGlobalError(value: string) {
+    this.globalError = value;
+  }
 }
