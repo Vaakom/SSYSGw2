@@ -19,7 +19,7 @@ import {TableMeta} from "./table.meta";
 export class TableComponent implements OnInit, OnDestroy{
   private tableSubscription: Subscription;
 
-  private rowsOnPage = 10;
+  private rowsOnPage = 40;
   private showPages = 10;
   
   tableCode: string;

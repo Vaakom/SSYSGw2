@@ -9,9 +9,11 @@ import {Observable} from "rxjs";
 export class ConfigGuard implements CanActivate {
 
   constructor(private sessionService: SessionService, private http: Http){
+    console.log(123);
   }
 
   canActivate() {
+    console.log(11111);
     return this.http.get("./assets/config.json").map(res => res.json()).map(json => this.successLoad(json)).catch(err	=> this.failedLoad(err));
   }
 

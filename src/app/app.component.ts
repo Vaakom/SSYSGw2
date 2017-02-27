@@ -20,7 +20,9 @@ export class AppComponent implements OnInit, OnDestroy{
     ngOnInit(): void {
       console.log(this.sessionService.getConfig());
         this.subscribeForWebsocketCrush();
-        this.webSocketService.start(this.sessionService.getConfig()['gatewayUrl']);
+        console.log(this.sessionService.getConfig());
+        //this.webSocketService.start(this.sessionService.getConfig()['gatewayUrl']);
+        this.webSocketService.start('ws://ft-depo:8088/SSYSGw/ws');
 
         console.log('Application init');
     }
