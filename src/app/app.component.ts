@@ -6,7 +6,7 @@ import {WebSocketService} from "./system/websocket.servcie";
 
 @Component({
     selector: 'my-app',
-    templateUrl: 'app.component.html'
+    templateUrl: 'app.component.prime.html'
 })
 
 export class AppComponent implements OnInit, OnDestroy{

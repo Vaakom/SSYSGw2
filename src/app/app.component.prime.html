@@ -1,0 +1,9 @@
+  <div class="row mx-0 h-100">
+    <div class="col-2 pl-0 " *ngIf="sessionService.isSessionOpen()" style="background-color:beige">
+      <top-menu #topMenu></top-menu>
+    </div>
+
+    <div [ngClass]="sessionService.isSessionOpen() ? 'col-10' : 'col-12'" style="background-color: azure">
+      <router-outlet></router-outlet>
+    </div>
+  </div>

@@ -1,0 +1,12 @@
+<div class="card h-100">
+    <div class="card-block">
+        <h2 class="card-title">{{tableMeta.name}}</h2>
+        <!--<h3 class="mt-2"></h3>
+        -->
+        <p-dataTable [value]="tableRows" resizableColumns="true" scrollable="true" scrollHeight="70%" scrollWidth="100%" [style]="{'margin-top':'30px'}">
+            <p-header></p-header>
+            <p-column [field] = "fieldName" [header] = "fieldName" [style]="{'width':'200px'}" *ngFor="let fieldName of tableMeta.legend.i"></p-column>
+        </p-dataTable>        
+        <p-paginator rows="10" totalRecords="120" [rowsPerPageOptions]="[10,20,30]"></p-paginator>        
+    </div>
+</div>

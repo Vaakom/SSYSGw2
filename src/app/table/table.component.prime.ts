@@ -1,5 +1,5 @@
 import {Component, OnInit, OnDestroy, OnChanges} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FormGroup, FormControl} from '@angular/forms';
 import {Subject, Observable, Subscription} from "rxjs/Rx";
 
@@ -16,7 +16,7 @@ import {TableMeta} from "./table.meta";
   templateUrl: 'table.component.prime.html'
 })
 
-export class TableComponent implements OnInit, OnDestroy{
+export class TableComponentPrime implements OnInit, OnDestroy{
   private tableSubscription: Subscription;
 
   private rowsOnPage = 40;
@@ -26,7 +26,9 @@ export class TableComponent implements OnInit, OnDestroy{
 
   tableMeta: TableMeta;
   
-  rowSet;
+  tableRows: Array<Object> = [];
+
+  rowSet;//
 
   tableConfig: TableConfig;
 
@@ -35,6 +37,7 @@ export class TableComponent implements OnInit, OnDestroy{
   filterForm: FormGroup;
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private tableDataService: TableDataServiceWs,                
               private sessionService: SessionService,
               private webSocketService: WebSocketService) {
@@ -46,8 +49,11 @@ export class TableComponent implements OnInit, OnDestroy{
       .filter((data: SocketData) => this.tableCode == data.data.params.type)
       .subscribe((data: SocketData) => this.processTableResponse(data));
     
-    this.route.params.subscribe(params => {      
-      this.initNewTable(params["code"]);
+    this.route.params.subscribe(params => {
+      if(!params["code"])      
+        this.router.navigate(['LoginFormComponent'])
+      else
+        this.initNewTable(params["code"]);
     });
   
   }
@@ -76,7 +82,6 @@ export class TableComponent implements OnInit, OnDestroy{
   
 
   private selectNewPage(pageNum: number){
-    console.log(pageNum);
     this.tableConfig.setCurrentPage(pageNum);
     this.tableDataService.subscribeTable(this.tableCode, this.tableConfig);
   }
@@ -84,7 +89,9 @@ export class TableComponent implements OnInit, OnDestroy{
   private processTableResponse(data: SocketData): void {
       this.showLoadIcon = false;
       this.tableConfig.setTotalRows(data.data.params.nm);
-      this.rowSet = data.data.rowSet
+      this.tableRows = this.createTableRows(data.data.rowSet);
+
+      this.rowSet = data.data.rowSet;
   }
 
   private initNewTable(tableCode: string): void {
@@ -100,6 +107,7 @@ export class TableComponent implements OnInit, OnDestroy{
   private resetCurrentTableProperties(): void {
       this.tableMeta = null;
       this.rowSet = null;
+      this.tableRows = null;
       this.tableConfig = null;
       this.showLoadIcon = true;
   }
@@ -143,5 +151,25 @@ export class TableComponent implements OnInit, OnDestroy{
       
     return filterStr.length > 0 ? filterStr : null;
   }  
+
+  private createTableRows(rowSet: Array<Object>): Array<Object> {
+    let tableRows = new Array<Object>();    
+    for(let row of rowSet)
+        tableRows.push(this.createTableRowObject(row));
+    
+    return tableRows;
+  }
+
+  private createTableRowObject(row): Object {
+    let tableRow = {};
+    for(let i = 0; i < this.tableMeta.legend.i.length; i++){
+        let name = this.tableMeta.legend.i[i];
+        let value = row[i];
+        tableRow[name] = value;
+    }      
+    
+    return tableRow;
+  }
+
 
 }
